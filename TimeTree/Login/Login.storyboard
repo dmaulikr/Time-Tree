@@ -1,36 +1,91 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="lJD-9V-CKg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Login View Controller-->
-        <scene sceneID="wqT-B3-3w7">
+        <scene sceneID="oaf-lz-omc">
             <objects>
-                <viewController id="lJD-9V-CKg" customClass="LoginViewController" sceneMemberID="viewController">
+                <viewController id="2QJ-Fd-wfN" customClass="LoginViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ZGv-zC-zx3"/>
-                        <viewControllerLayoutGuide type="bottom" id="q3m-as-40d"/>
+                        <viewControllerLayoutGuide type="top" id="JS5-aE-Yft"/>
+                        <viewControllerLayoutGuide type="bottom" id="faE-nt-NzZ"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="xoM-cY-PqK">
+                    <view key="view" contentMode="scaleToFill" id="Tpd-f4-Pes">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gjd-By-tDY" customClass="FBSDKLoginButton">
-                                <rect key="frame" x="87" y="514" width="200" height="40"/>
-                                <color key="backgroundColor" red="0.45882352939999999" green="0.80000000000000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ooc-k9-pzk" userLabel="FB_button" customClass="FBSDKLoginButton">
+                                <rect key="frame" x="62" y="529" width="250" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="250" id="oIU-g8-7qd"/>
+                                </constraints>
+                                <state key="normal" title="login">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="FBlogin:" destination="2QJ-Fd-wfN" eventType="touchUpInside" id="NxL-Fs-OMP"/>
+                                </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.75" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="faE-nt-NzZ" firstAttribute="top" secondItem="Ooc-k9-pzk" secondAttribute="bottom" constant="108" id="0Dh-vL-3xT"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Ooc-k9-pzk" secondAttribute="trailing" constant="47" id="O7V-ad-rOg"/>
+                            <constraint firstItem="Ooc-k9-pzk" firstAttribute="leading" secondItem="Tpd-f4-Pes" secondAttribute="leadingMargin" constant="46" id="fZD-B2-RpT"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="Lkb-6t-Jy1"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="FBLogin_Btn" destination="Ooc-k9-pzk" id="BED-cg-T1A"/>
+                        <segue destination="027-cd-qP1" kind="modal" identifier="" id="09z-r4-sDk"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Me1-ez-AVP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2253.5" y="294.5"/>
+        </scene>
+        <!--Test View Controller-->
+        <scene sceneID="2HP-S6-lZe">
+            <objects>
+                <viewController storyboardIdentifier="LoginSuccessful" id="027-cd-qP1" customClass="testViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="aJh-cl-Qej"/>
+                        <viewControllerLayoutGuide type="bottom" id="Q0j-Ws-c0c"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="00X-1X-Rkd">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.44313728810000003" green="0.90588241820000004" blue="0.74509805439999999" alpha="1" colorSpace="deviceRGB"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="GWU-iO-QHP"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ooe-LJ-vPh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LB0-Dz-MZ4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="255" y="211"/>
+            <point key="canvasLocation" x="2706.5" y="293.5"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="8sq-Qv-4KF">
+            <objects>
+                <navigationController storyboardIdentifier="loginVC" automaticallyAdjustsScrollViewInsets="NO" id="uXL-gt-TmG" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="83k-qO-Zuz">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="2QJ-Fd-wfN" kind="relationship" relationship="rootViewController" id="hAI-fn-3lF"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xw4-pV-lII" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1629" y="294"/>
         </scene>
     </scenes>
 </document>
