@@ -7,6 +7,12 @@
 //
 
 #import "AppDelegate.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import "Parse/Parse.h"
+#import "ParseFacebookUtils/PFFacebookUtils.h"
+#import "LoginViewController.h"
+#import "ViewController.h"
 
 @interface AppDelegate ()
 
@@ -16,8 +22,43 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen]bounds]];
+    
+    UIStoryboard *MainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+#warning need add instructionVC 到時再由instructionVC去trigger present loginVC
+    ViewController *instructionVC = [MainStoryboard instantiateViewControllerWithIdentifier:@"instructionVC"];
+    self.window.rootViewController = instructionVC;
+    
+    // login VC
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Login" bundle:nil];
+    LoginViewController *loginVC = [storyboard instantiateViewControllerWithIdentifier:@"loginVC"];
+    
+    [self.window makeKeyAndVisible];
+    
+#warning temp add present here , need modify when instructionVC get ready 
+    [self.window.rootViewController presentViewController:loginVC animated:YES completion:nil];
+
+    //
+    [Parse enableLocalDatastore];
+    
+    // Initialize Parse.
+    [Parse setApplicationId:@"JUNG16a4evvyefhnobYFlcrD3C3XuuePtccyPGIy"
+                  clientKey:@"9Cv7Kf3NZT9FlvTinWBWYg7gvESROF6zxLPoVNj4"];
+    
+    // [Optional] Track statistics around application opens.
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+    
+    // Initialize Parse's Facebook Utilities singleton. This uses the FacebookAppID we specified in our App bundle's plist.
+    [PFFacebookUtils initializeFacebook];
+    
+    //
+    [FBSDKLoginButton class];
+    
+    
     return YES;
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -36,12 +77,31 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [FBSDKAppEvents activateApp];
+    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
+}
+
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    //    return [[FBSDKApplicationDelegate sharedInstance] application:application
+    //                                                          openURL:url
+    //                                                sourceApplication:sourceApplication
+    //                                                       annotation:annotation];
+    
+    return [PFFacebookUtils handleOpenURL:url];
+    
+    
+}
+
+
+- (BOOL) application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    return [PFFacebookUtils handleOpenURL:url];
 }
 
 #pragma mark - Core Data stack
