@@ -56,6 +56,9 @@
     //
     [FBSDKLoginButton class];
     
+    //
+    [FBLoginView class];
+
     
     return YES;
     
@@ -89,11 +92,14 @@
 
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    //    return [[FBSDKApplicationDelegate sharedInstance] application:application
-    //                                                          openURL:url
-    //                                                sourceApplication:sourceApplication
-    //                                                       annotation:annotation];
     
+    // FB SDK method
+//        return [[FBSDKApplicationDelegate sharedInstance] application:application
+//                                                              openURL:url
+//                                                    sourceApplication:sourceApplication
+//                                                           annotation:annotation];
+//
+    //parse method
     return [PFFacebookUtils handleOpenURL:url];
     
     
