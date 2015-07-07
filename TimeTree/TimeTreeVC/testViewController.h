@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 @interface testViewController : UIViewController
 
+
+@property (weak, nonatomic) IBOutlet FBProfilePictureView *profileImg;
 @end

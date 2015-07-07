@@ -101,6 +101,8 @@
     
     UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
     testViewController *vc= [sb instantiateViewControllerWithIdentifier:@"LoginSuccessful"];
+    
+    vc.profileImg.profileID=[defaults objectForKey:@"pic"];
     [self.navigationController pushViewController:vc animated:YES];
 
 
@@ -122,7 +124,11 @@
             PFUser *pfUser=[PFUser currentUser];
             NSLog(@"id is %@",pfUser.objectId);
             pfUser.email=[defaults objectForKey:@"email"];
+            pfUser.username=[defaults objectForKey:@"name"];
+            [pfUser setObject:[defaults objectForKey:@"gender"] forKey:@"gender"];
+//            [pfUser setObject:user.objectId forKey:@"profileImg"];
             [pfUser saveInBackground];
+            
         }
     }];
     
@@ -135,12 +141,54 @@
     //nameLabel 的內容將會改變成使用者的名稱
     NSLog(@"user is %@",user);
     
+    // save user infor
     [defaults setObject: [user objectForKey:@"email"] forKey:@"email"];
+    [defaults setObject:[user objectForKey:@"name"] forKey:@"name"];
+    [defaults setObject:[user objectForKey:@"gender"] forKey:@"gender"];
+    [defaults setObject:user.objectID forKey:@"pic"];
     [defaults synchronize];
     
     [self parseLogin];
+    
+//    [self performSelector:@selector(getUserImageFromFBView) withObject:nil afterDelay:1.0];
    
 }
+/*
+- (void)getUserImageFromFBView{
+    
+    UIImage *img = nil;
+    
+    //1 - Solution to get UIImage obj
+    
+    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
+    testViewController *vc= [sb instantiateViewControllerWithIdentifier:@"LoginSuccessful"];
+    
+//    vc.profileImg.profileID=[defaults objectForKey:@"pic"];
+    [self.navigationController pushViewController:vc animated:YES];
+    
+    for (NSObject *obj in [vc.profileImg subviews]) {
+        if ([obj isMemberOfClass:[UIImageView class]]) {
+            UIImageView *objImg = (UIImageView *)obj;
+            img = objImg.image;
+            break;
+        }
+    }
+    
+    //2 - Solution to get UIImage obj
+    
+    //    UIGraphicsBeginImageContext(profileDP.frame.size);
+    //    [profileDP.layer renderInContext:UIGraphicsGetCurrentContext()];
+    //    img = UIGraphicsGetImageFromCurrentImageContext();
+    //    UIGraphicsEndImageContext();
+    
+    //Here I'm setting image and it works 100% for me.
+    
+//    testImgv.image = img;
+//    vc.profileImg=img;
+
+    
+}
+*/
 
 
 //log out

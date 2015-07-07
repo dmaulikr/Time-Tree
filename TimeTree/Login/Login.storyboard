@@ -73,10 +73,19 @@
                     <view key="view" contentMode="scaleToFill" id="00X-1X-Rkd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HY4-8o-e5h" customClass="FBProfilePictureView">
+                                <rect key="frame" x="137" y="202" width="100" height="100"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" red="0.44313728810000003" green="0.90588241820000004" blue="0.74509805439999999" alpha="1" colorSpace="deviceRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="GWU-iO-QHP"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="profileImg" destination="HY4-8o-e5h" id="KC7-uH-tK2"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LB0-Dz-MZ4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
