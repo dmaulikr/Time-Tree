@@ -58,6 +58,8 @@
     
     //
     [FBLoginView class];
+    
+    [FBProfilePictureView class];
 
     
     return YES;
