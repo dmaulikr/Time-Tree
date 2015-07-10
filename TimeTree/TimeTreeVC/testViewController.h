@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <FacebookSDK/FacebookSDK.h>
+#import "AsyncImageView.h"
 
 @interface testViewController : UIViewController
+@property (weak, nonatomic) IBOutlet AsyncImageView *profileImg;
+@property (strong,nonatomic) NSURL *url;
 
-
-@property (weak, nonatomic) IBOutlet FBProfilePictureView *profileImg;
 @end

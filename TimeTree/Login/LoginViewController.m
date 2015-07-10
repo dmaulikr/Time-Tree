@@ -14,6 +14,8 @@
 #import "testViewController.h"
 #import <FacebookSDK/FacebookSDK.h>
 #import "ParseFacebookUtils/PFFacebookUtils.h"
+#import "URLib.h"
+#import "AsyncImageView.h"
 
 
 
@@ -50,65 +52,28 @@
     // Dispose of any resources that can be recreated.
 }
 
-
-
-//- (IBAction)FBlogin:(id)sender {
-//    
-//    // Disable the Login button to prevent multiple touches
-//    [self.FBLogin_Btn setEnabled:NO];
-//    
-//    // Do the login
-//    [Comms login:self];
-//
-//}
-
-//- (void) commsDidLogin:(BOOL)loggedIn {
-//    // Re-enable the Login button
-//    [self.FBLogin_Btn setEnabled:YES];
-//    
-//    
-//    // Did we login successfully ?
-//    if (loggedIn) {
-////        
-////        UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
-////        testViewController *vc= [sb instantiateViewControllerWithIdentifier:@"LoginSuccessful"];
-////        
-////        [self.navigationController pushViewController:vc animated:YES];
-////      
-////        
-//        
-////        if ([FBSDKProfile currentProfile]) {
-////            [FBSDKProfile enableUpdatesOnAccessTokenChange:YES];
-////            NSLog(@"user is -- %@",[[FBSDKProfile currentProfile]name]);
-////        }
-//        
-//        
-//    } else {
-//        // Show error alert
-//        [[[UIAlertView alloc] initWithTitle:@"Login Failed"
-//                                    message:@"Facebook Login failed. Please try again"
-//                                   delegate:nil
-//                          cancelButtonTitle:@"Ok"
-//                          otherButtonTitles:nil] show];
-//    }
-//}
-
 #pragma mark -  FBLoginView delegate
-
-// logged
+// 3. user logged
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView;
 {
     
     UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
     testViewController *vc= [sb instantiateViewControllerWithIdentifier:@"LoginSuccessful"];
     
-    vc.profileImg.profileID=[defaults objectForKey:@"pic"];
+    // 傳URL過去
+    NSURL *empUrl =nil;
+    vc.profileImg.imageURL = empUrl;
+    [vc.profileImg setShowActivityIndicator:YES];
+    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:vc.profileImg.imageURL];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", FB_GRAPH,[defaults objectForKey:@"pic"],FB_PROFILE_IMG]];
+    vc.url=url;
+    
     [self.navigationController pushViewController:vc animated:YES];
 
 
 }
 
-// parse login via FB (PFUser)
+// 2. parse login via FB (PFUser)
 -(void)parseLogin{
     [PFFacebookUtils logInWithPermissions:@[@"public_profile", @"email", @"user_friends"] block:^(PFUser *user, NSError *error) {
         // Was login successful ?
@@ -122,11 +87,11 @@
         } else {
             // Callback - login successful
             PFUser *pfUser=[PFUser currentUser];
-            NSLog(@"id is %@",pfUser.objectId);
             pfUser.email=[defaults objectForKey:@"email"];
             pfUser.username=[defaults objectForKey:@"name"];
+            
+            // create object in parse
             [pfUser setObject:[defaults objectForKey:@"gender"] forKey:@"gender"];
-//            [pfUser setObject:user.objectId forKey:@"profileImg"];
             [pfUser saveInBackground];
             
         }
@@ -134,66 +99,28 @@
     
 }
 
+// 1. fetch user info
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView
                             user:(id<FBGraphUser>)user {
-    //將 layout 是 profilePictureView 將會顯示使用者的大頭照
-    //    self.profilePictureView.profileID = user.id;
-    //nameLabel 的內容將會改變成使用者的名稱
     NSLog(@"user is %@",user);
     
-    // save user infor
+    // save user information
     [defaults setObject: [user objectForKey:@"email"] forKey:@"email"];
     [defaults setObject:[user objectForKey:@"name"] forKey:@"name"];
     [defaults setObject:[user objectForKey:@"gender"] forKey:@"gender"];
     [defaults setObject:user.objectID forKey:@"pic"];
+    
     [defaults synchronize];
     
+    // parse login
     [self parseLogin];
     
-//    [self performSelector:@selector(getUserImageFromFBView) withObject:nil afterDelay:1.0];
-   
 }
-/*
-- (void)getUserImageFromFBView{
-    
-    UIImage *img = nil;
-    
-    //1 - Solution to get UIImage obj
-    
-    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
-    testViewController *vc= [sb instantiateViewControllerWithIdentifier:@"LoginSuccessful"];
-    
-//    vc.profileImg.profileID=[defaults objectForKey:@"pic"];
-    [self.navigationController pushViewController:vc animated:YES];
-    
-    for (NSObject *obj in [vc.profileImg subviews]) {
-        if ([obj isMemberOfClass:[UIImageView class]]) {
-            UIImageView *objImg = (UIImageView *)obj;
-            img = objImg.image;
-            break;
-        }
-    }
-    
-    //2 - Solution to get UIImage obj
-    
-    //    UIGraphicsBeginImageContext(profileDP.frame.size);
-    //    [profileDP.layer renderInContext:UIGraphicsGetCurrentContext()];
-    //    img = UIGraphicsGetImageFromCurrentImageContext();
-    //    UIGraphicsEndImageContext();
-    
-    //Here I'm setting image and it works 100% for me.
-    
-//    testImgv.image = img;
-//    vc.profileImg=img;
 
-    
-}
-*/
-
-
-//log out
+// log out
 - (void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView;
 {
+#warning  write later clear user information
 //    [defaults setObject:nil forKey:@"email"];
 //    [defaults synchronize];
 //    [PFUser logOut];
