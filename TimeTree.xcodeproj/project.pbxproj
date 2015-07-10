@@ -40,6 +40,8 @@
 		2924CF1A1B340ADD009E2B17 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2924CF191B340ADD009E2B17 /* FacebookSDK.framework */; };
 		2924CF1D1B340DEC009E2B17 /* Comms.m in Sources */ = {isa = PBXBuildFile; fileRef = 2924CF1C1B340DEC009E2B17 /* Comms.m */; };
 		2986EA671B3449EF0081AC33 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2986EA661B3449EF0081AC33 /* FBSDKCoreKit.framework */; };
+		29EB565A1B500310005FE66B /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 29EB56591B500310005FE66B /* AsyncImageView.m */; };
+		29EB565F1B5004D2005FE66B /* URLib.m in Sources */ = {isa = PBXBuildFile; fileRef = 29EB565E1B5004D2005FE66B /* URLib.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +109,10 @@
 		2924CF1B1B340DEC009E2B17 /* Comms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comms.h; sourceTree = "<group>"; };
 		2924CF1C1B340DEC009E2B17 /* Comms.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comms.m; sourceTree = "<group>"; };
 		2986EA661B3449EF0081AC33 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		29EB56581B500310005FE66B /* AsyncImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncImageView.h; sourceTree = "<group>"; };
+		29EB56591B500310005FE66B /* AsyncImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncImageView.m; sourceTree = "<group>"; };
+		29EB565D1B5004D2005FE66B /* URLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URLib.h; sourceTree = "<group>"; };
+		29EB565E1B5004D2005FE66B /* URLib.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLib.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +175,8 @@
 		29107A361B271FB6007AB752 /* TimeTree */ = {
 			isa = PBXGroup;
 			children = (
+				29EB565B1B50041B005FE66B /* Management */,
+				29EB56561B5002BC005FE66B /* OpenSource */,
 				2917462B1B34182800F0F078 /* TimeTreeVC */,
 				29107A671B2725E1007AB752 /* Login */,
 				29107A411B271FB6007AB752 /* ViewController.h */,
@@ -257,6 +265,40 @@
 				2917462D1B34185200F0F078 /* testViewController.m */,
 			);
 			path = TimeTreeVC;
+			sourceTree = "<group>";
+		};
+		29EB56561B5002BC005FE66B /* OpenSource */ = {
+			isa = PBXGroup;
+			children = (
+				29EB56571B5002E3005FE66B /* AsyncImageView */,
+			);
+			path = OpenSource;
+			sourceTree = "<group>";
+		};
+		29EB56571B5002E3005FE66B /* AsyncImageView */ = {
+			isa = PBXGroup;
+			children = (
+				29EB56581B500310005FE66B /* AsyncImageView.h */,
+				29EB56591B500310005FE66B /* AsyncImageView.m */,
+			);
+			path = AsyncImageView;
+			sourceTree = "<group>";
+		};
+		29EB565B1B50041B005FE66B /* Management */ = {
+			isa = PBXGroup;
+			children = (
+				29EB565C1B500490005FE66B /* URLib */,
+			);
+			path = Management;
+			sourceTree = "<group>";
+		};
+		29EB565C1B500490005FE66B /* URLib */ = {
+			isa = PBXGroup;
+			children = (
+				29EB565D1B5004D2005FE66B /* URLib.h */,
+				29EB565E1B5004D2005FE66B /* URLib.m */,
+			);
+			path = URLib;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -361,6 +403,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29EB565F1B5004D2005FE66B /* URLib.m in Sources */,
 				29107A3D1B271FB6007AB752 /* AppDelegate.m in Sources */,
 				29107A3A1B271FB6007AB752 /* main.m in Sources */,
 				29107A431B271FB6007AB752 /* ViewController.m in Sources */,
@@ -368,6 +411,7 @@
 				29107A401B271FB6007AB752 /* TimeTree.xcdatamodeld in Sources */,
 				2917462E1B34185200F0F078 /* testViewController.m in Sources */,
 				29107A6A1B272645007AB752 /* LoginViewController.m in Sources */,
+				29EB565A1B500310005FE66B /* AsyncImageView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
