@@ -11,11 +11,12 @@
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import "Parse/Parse.h"
 #import "Comms.h"
-#import "testViewController.h"
+#import "CatalogueViewController.h"
 #import <FacebookSDK/FacebookSDK.h>
 #import "ParseFacebookUtils/PFFacebookUtils.h"
 #import "URLib.h"
 #import "AsyncImageView.h"
+#import "CatalogueTableVC.h"
 
 
 
@@ -58,13 +59,41 @@
 -(void)viewDidAppear:(BOOL)animated{
 }
 
+- (IBAction)login:(id)sender {
+    
+    // user name 有大小寫之分
+    [PFUser logInWithUsernameInBackground:self.name.text password:self.password.text block:^(PFUser *user,NSError *error){
+       
+        if (!error) {
+            
+            UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
+//            CatalogueViewController *vc= [sb instantiateViewControllerWithIdentifier:@"GoCatalogueVC"];
+            
+            CatalogueTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"GoCatalogueTVC"];
+            
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        else{
+            
+                UIAlertView *av=[[UIAlertView alloc]initWithTitle:nil message:@"Please enter valid username/password" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [av show];
+            
+            NSLog(@"sign up error %@",error.description);
+
+        }
+        
+    }];
+    
+}
+
+
 #pragma mark -  FBLoginView delegate
 // 3. user logged
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView;
 {
     
     UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
-    testViewController *vc= [sb instantiateViewControllerWithIdentifier:@"LoginSuccessful"];
+    CatalogueViewController *vc= [sb instantiateViewControllerWithIdentifier:@"GoCatalogueVC"];
     
     // 傳URL過去
     NSURL *empUrl =nil;
@@ -73,7 +102,7 @@
     [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:vc.profileImg.imageURL];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", FB_GRAPH,[defaults objectForKey:@"pic"],FB_PROFILE_IMG]];
     vc.url=url;
-    
+#warning write later FB log out做完再打開
 //    [self.navigationController pushViewController:vc animated:YES];
 
 
