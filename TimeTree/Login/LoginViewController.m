@@ -44,12 +44,18 @@
     
     self.fbLoginView1.delegate=self;
     
- 
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [self.navigationController setNavigationBarHidden:YES];
+
+}
+-(void)viewDidAppear:(BOOL)animated{
 }
 
 #pragma mark -  FBLoginView delegate
@@ -68,7 +74,7 @@
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", FB_GRAPH,[defaults objectForKey:@"pic"],FB_PROFILE_IMG]];
     vc.url=url;
     
-    [self.navigationController pushViewController:vc animated:YES];
+//    [self.navigationController pushViewController:vc animated:YES];
 
 
 }

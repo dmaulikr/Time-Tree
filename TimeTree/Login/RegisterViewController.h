@@ -9,5 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface RegisterViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UITextField *name;
+@property (weak, nonatomic) IBOutlet UITextField *password;
+@property (weak, nonatomic) IBOutlet UITextField *email;
+@property (weak, nonatomic) IBOutlet UIButton *male;
 
+@property (weak, nonatomic) IBOutlet UIButton *female;
 @end
