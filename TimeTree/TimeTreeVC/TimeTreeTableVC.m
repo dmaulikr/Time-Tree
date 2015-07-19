@@ -8,8 +8,11 @@
 
 #import "TimeTreeTableVC.h"
 #import "TimeTreeTableViewCell.h"
+#import "NavigationVC.h"
 
-@interface TimeTreeTableVC ()
+
+
+@interface TimeTreeTableVC () 
 {
     
 }
@@ -23,7 +26,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // cell 直接建在tableViewController 不用寫以下註冊code
+    self.title = @"Home Controller";
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:(NavigationVC *)self.navigationController
+                                                                            action:@selector(showMenu)];
+ 
+ 
+    
+// cell 直接建在tableViewController 不用寫以下註冊code
 //    [self.tableView registerNib:[UINib nibWithNibName:@"TimeTreeTableViewCell" bundle:nil] forCellReuseIdentifier:@"Cell"];
     
     self.tempArray=@[@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1"];

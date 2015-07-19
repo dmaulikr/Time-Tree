@@ -60,30 +60,11 @@
                             <outlet property="delegate" destination="DJ6-k9-FHu" id="x8n-mP-NUZ"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="Lka-xg-MNK"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dE1-qY-HF6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1248.5" y="78.5"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="eHg-eX-fmC">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="rSs-c0-MuE" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Qh5-6B-eDE">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="DJ6-k9-FHu" kind="relationship" relationship="rootViewController" id="SlL-92-nXX"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xoR-sH-weV" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="436" y="78"/>
+            <point key="canvasLocation" x="436.5" y="78.5"/>
         </scene>
     </scenes>
     <resources>
