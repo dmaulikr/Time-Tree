@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "REFrostedViewController.h"
 
-@interface MenuTableViewController : UITableViewController
+
+@interface MenuTableViewController : UITableViewController<UITableViewDataSource, UITableViewDelegate>
+
 
 @end

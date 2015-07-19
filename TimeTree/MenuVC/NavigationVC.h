@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface NavigationVC : UINavigationController
-
+- (void)showMenu;
 @end
