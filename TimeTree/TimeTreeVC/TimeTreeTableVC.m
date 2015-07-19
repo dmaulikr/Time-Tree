@@ -1,27 +1,27 @@
 //
-//  CatalogueTableVC.m
+//  TimeTreeTableVC.m
 //  TimeTree
 //
-//  Created by Joseph on 2015/7/11.
+//  Created by Joseph on 2015/7/16.
 //  Copyright (c) 2015年 dosomethingq. All rights reserved.
 //
 
-#import "CatalogueTableVC.h"
+#import "TimeTreeTableVC.h"
+#import "TimeTreeTableViewCell.h"
 
-@interface CatalogueTableVC ()
+@interface TimeTreeTableVC ()
+{
+    
+}
 
 @end
 
-@implementation CatalogueTableVC
+@implementation TimeTreeTableVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self.tableView registerNib:[UINib nibWithNibName:@"TimeTreeTableViewCell" bundle:nil] forCellReuseIdentifier:@"Cell"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -31,32 +31,31 @@
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
-    return 2;
-}
+//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+//    // Return the number of sections.
+//    return 1;
+//}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    
-    if (section==0) {
-        return 1;
-    }else if (section==1){
-        return 6;
-    }
-    
-    return 0;
+    return 1;
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
     
-    // Configure the cell...
+    static NSString *identify=@"Cell";
+
+    TimeTreeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identify forIndexPath:indexPath];
+    
+    if (cell==nil) {
+        cell=[[TimeTreeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
+    }
+    
     
     return cell;
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.

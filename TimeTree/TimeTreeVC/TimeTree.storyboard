@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--Time Tree TableVC-->
+        <scene sceneID="5N3-OH-2vC">
+            <objects>
+                <tableViewController storyboardIdentifier="TimeTreeVC" id="DJ6-k9-FHu" customClass="TimeTreeTableVC" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="157" sectionHeaderHeight="22" sectionFooterHeight="22" id="nPF-2h-bwi">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" rowHeight="157" id="TbH-0w-17f" customClass="TimeTreeTableViewCell">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TbH-0w-17f" id="QEs-MC-gNs">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CsI-MM-gXK" userLabel="LeftButton">
+                                            <rect key="frame" x="91" y="53" width="96" height="52"/>
+                                            <state key="normal" image="leftBranch">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="mainBranch" translatesAutoresizingMaskIntoConstraints="NO" id="Y8H-kh-G2s">
+                                            <rect key="frame" x="162" y="9" width="50" height="140"/>
+                                        </imageView>
+                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sxC-Mf-vBu" userLabel="RightButton">
+                                            <rect key="frame" x="184" y="53" width="100" height="50"/>
+                                            <state key="normal" image="rightBranch">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="CsI-MM-gXK" firstAttribute="leading" secondItem="QEs-MC-gNs" secondAttribute="leadingMargin" constant="83" id="9Pd-A7-rLQ"/>
+                                        <constraint firstItem="CsI-MM-gXK" firstAttribute="top" secondItem="QEs-MC-gNs" secondAttribute="topMargin" constant="45" id="Iv4-ps-Vp0"/>
+                                        <constraint firstItem="sxC-Mf-vBu" firstAttribute="top" secondItem="CsI-MM-gXK" secondAttribute="top" id="TUU-Pc-mgn"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="sxC-Mf-vBu" secondAttribute="trailing" constant="83" id="q4R-yH-Pk6"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="leftButton" destination="CsI-MM-gXK" id="cmd-C5-zO9"/>
+                                    <outlet property="mainBranch" destination="Y8H-kh-G2s" id="xDr-IP-y3M"/>
+                                    <outlet property="rightButton" destination="sxC-Mf-vBu" id="8Pc-G8-qS0"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="DJ6-k9-FHu" id="KZv-XJ-eKD"/>
+                            <outlet property="delegate" destination="DJ6-k9-FHu" id="x8n-mP-NUZ"/>
+                        </connections>
+                    </tableView>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dE1-qY-HF6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="436.5" y="78.5"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="leftBranch" width="96" height="52"/>
+        <image name="mainBranch" width="17" height="141"/>
+        <image name="rightBranch" width="96" height="52"/>
+    </resources>
+</document>

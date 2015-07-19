@@ -17,6 +17,7 @@
 #import "URLib.h"
 #import "AsyncImageView.h"
 #import "CatalogueTableVC.h"
+#import "TimeTreeTableVC.h"
 
 
 
@@ -66,12 +67,18 @@
        
         if (!error) {
             
-            UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
-//            CatalogueViewController *vc= [sb instantiateViewControllerWithIdentifier:@"GoCatalogueVC"];
+//            static dispatch_once_t onceToken;
+//            dispatch_once(&onceToken,^{
+//            UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
+//            CatalogueTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"GoCatalogueTVC"];
+//            [self.navigationController pushViewController:vc animated:YES];
+                
+                UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
+                TimeTreeTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"TimeTreeVC"];
+                [self.navigationController pushViewController:vc animated:YES];
+//            });
             
-            CatalogueTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"GoCatalogueTVC"];
             
-            [self.navigationController pushViewController:vc animated:YES];
         }
         else{
             
@@ -91,17 +98,17 @@
 // 3. user logged
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView;
 {
-    
-    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
-    CatalogueViewController *vc= [sb instantiateViewControllerWithIdentifier:@"GoCatalogueVC"];
-    
-    // 傳URL過去
-    NSURL *empUrl =nil;
-    vc.profileImg.imageURL = empUrl;
-    [vc.profileImg setShowActivityIndicator:YES];
-    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:vc.profileImg.imageURL];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", FB_GRAPH,[defaults objectForKey:@"pic"],FB_PROFILE_IMG]];
-    vc.url=url;
+#warning do later , 決定大頭圖在哪，在寫
+//    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
+//    CatalogueViewController *vc= [sb instantiateViewControllerWithIdentifier:@"GoCatalogueVC"];
+//    
+//    // 傳URL過去
+//    NSURL *empUrl =nil;
+//    vc.profileImg.imageURL = empUrl;
+//    [vc.profileImg setShowActivityIndicator:YES];
+//    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:vc.profileImg.imageURL];
+//    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", FB_GRAPH,[defaults objectForKey:@"pic"],FB_PROFILE_IMG]];
+//    vc.url=url;
 #warning write later FB log out做完再打開
 //    [self.navigationController pushViewController:vc animated:YES];
 
