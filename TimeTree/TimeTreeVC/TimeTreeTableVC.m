@@ -14,6 +14,8 @@
     
 }
 
+@property (strong,nonatomic) NSArray *tempArray;
+
 @end
 
 @implementation TimeTreeTableVC
@@ -21,7 +23,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.tableView registerNib:[UINib nibWithNibName:@"TimeTreeTableViewCell" bundle:nil] forCellReuseIdentifier:@"Cell"];
+    // cell 直接建在tableViewController 不用寫以下註冊code
+//    [self.tableView registerNib:[UINib nibWithNibName:@"TimeTreeTableViewCell" bundle:nil] forCellReuseIdentifier:@"Cell"];
+    
+    self.tempArray=@[@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1"];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -38,9 +44,19 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 1;
+//    return self.tempArray.count;
+    return 3;
 }
 
+//- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+//{
+//    return 150;
+//}
+
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 80.0f;
+//}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -51,6 +67,34 @@
     if (cell==nil) {
         cell=[[TimeTreeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
     }
+    
+//    [self.tableView setContentInset:UIEdgeInsetsMake(60, 0, 0, 0)];
+    
+    if (indexPath.row%2) {
+        // odd
+        [cell.rightButton setHidden:YES];
+        [cell.leftButton setHidden:NO];
+        
+    }else{
+        // even
+        [cell.rightButton setHidden:NO];
+        [cell.leftButton setHidden:YES];
+    }
+    
+//    
+//    for (NSInteger i=0; i<self.tempArray.count; i++) {
+//        if (i%2) {
+//            //odd
+//            [cell.rightButton setHidden:YES];
+//            [cell.leftButton setHidden:NO];
+//            NSLog(@"odd");
+//        }else{
+//            //even
+//            [cell.rightButton setHidden:NO];
+//            [cell.leftButton setHidden:YES];
+//            NSLog(@"even");
+//        }
+//    }
     
     
     return cell;

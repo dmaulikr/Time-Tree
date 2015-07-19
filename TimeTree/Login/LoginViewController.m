@@ -64,25 +64,25 @@
     
     // user name 有大小寫之分
     [PFUser logInWithUsernameInBackground:self.name.text password:self.password.text block:^(PFUser *user,NSError *error){
-       
+        
         if (!error) {
             
-//            static dispatch_once_t onceToken;
-//            dispatch_once(&onceToken,^{
-//            UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
-//            CatalogueTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"GoCatalogueTVC"];
-//            [self.navigationController pushViewController:vc animated:YES];
-                
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken,^{
+                UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
+                CatalogueTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"GoCatalogueTVC"];
+                [self.navigationController pushViewController:vc animated:YES];
+            });
+            
+            if (!onceToken) {
                 UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
                 TimeTreeTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"TimeTreeVC"];
                 [self.navigationController pushViewController:vc animated:YES];
-//            });
-            
-            
+            }
         }
         else{
             
-                UIAlertView *av=[[UIAlertView alloc]initWithTitle:nil message:@"Please enter valid username/password" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            UIAlertView *av=[[UIAlertView alloc]initWithTitle:nil message:@"Please enter valid username/password" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                 [av show];
             
             NSLog(@"sign up error %@",error.description);

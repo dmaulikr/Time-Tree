@@ -8,39 +8,45 @@
         <!--Time Tree TableVC-->
         <scene sceneID="5N3-OH-2vC">
             <objects>
-                <tableViewController storyboardIdentifier="TimeTreeVC" id="DJ6-k9-FHu" customClass="TimeTreeTableVC" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="157" sectionHeaderHeight="22" sectionFooterHeight="22" id="nPF-2h-bwi">
+                <tableViewController storyboardIdentifier="TimeTreeVC" automaticallyAdjustsScrollViewInsets="NO" id="DJ6-k9-FHu" customClass="TimeTreeTableVC" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="203" sectionHeaderHeight="22" sectionFooterHeight="22" id="nPF-2h-bwi">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" rowHeight="157" id="TbH-0w-17f" customClass="TimeTreeTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" rowHeight="203" id="TbH-0w-17f" customClass="TimeTreeTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TbH-0w-17f" id="QEs-MC-gNs">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CsI-MM-gXK" userLabel="LeftButton">
-                                            <rect key="frame" x="91" y="53" width="96" height="52"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="mainBranch" translatesAutoresizingMaskIntoConstraints="NO" id="Y8H-kh-G2s">
+                                            <rect key="frame" x="162" y="0.0" width="50" height="204"/>
+                                        </imageView>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CsI-MM-gXK" userLabel="LeftButton">
+                                            <rect key="frame" x="88" y="76" width="96" height="52"/>
                                             <state key="normal" image="leftBranch">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                         </button>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="mainBranch" translatesAutoresizingMaskIntoConstraints="NO" id="Y8H-kh-G2s">
-                                            <rect key="frame" x="162" y="9" width="50" height="140"/>
-                                        </imageView>
-                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sxC-Mf-vBu" userLabel="RightButton">
-                                            <rect key="frame" x="184" y="53" width="100" height="50"/>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sxC-Mf-vBu" userLabel="RightButton">
+                                            <rect key="frame" x="191" y="76" width="96" height="52"/>
                                             <state key="normal" image="rightBranch">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                         </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="CsI-MM-gXK" firstAttribute="leading" secondItem="QEs-MC-gNs" secondAttribute="leadingMargin" constant="83" id="9Pd-A7-rLQ"/>
-                                        <constraint firstItem="CsI-MM-gXK" firstAttribute="top" secondItem="QEs-MC-gNs" secondAttribute="topMargin" constant="45" id="Iv4-ps-Vp0"/>
-                                        <constraint firstItem="sxC-Mf-vBu" firstAttribute="top" secondItem="CsI-MM-gXK" secondAttribute="top" id="TUU-Pc-mgn"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="sxC-Mf-vBu" secondAttribute="trailing" constant="83" id="q4R-yH-Pk6"/>
+                                        <constraint firstItem="CsI-MM-gXK" firstAttribute="leading" secondItem="QEs-MC-gNs" secondAttribute="leadingMargin" constant="80" id="9Pd-A7-rLQ"/>
+                                        <constraint firstItem="CsI-MM-gXK" firstAttribute="top" secondItem="QEs-MC-gNs" secondAttribute="topMargin" constant="68" id="Iv4-ps-Vp0"/>
+                                        <constraint firstItem="sxC-Mf-vBu" firstAttribute="top" secondItem="CsI-MM-gXK" secondAttribute="top" constant="2" id="TUU-Pc-mgn"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="sxC-Mf-vBu" secondAttribute="trailing" constant="80" id="q4R-yH-Pk6"/>
+                                        <constraint firstItem="sxC-Mf-vBu" firstAttribute="top" secondItem="QEs-MC-gNs" secondAttribute="topMargin" constant="68" id="xDh-dt-Uex"/>
                                     </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="TUU-Pc-mgn"/>
+                                        </mask>
+                                    </variation>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="leftButton" destination="CsI-MM-gXK" id="cmd-C5-zO9"/>
@@ -54,11 +60,30 @@
                             <outlet property="delegate" destination="DJ6-k9-FHu" id="x8n-mP-NUZ"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="Lka-xg-MNK"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dE1-qY-HF6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="436.5" y="78.5"/>
+            <point key="canvasLocation" x="1248.5" y="78.5"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="eHg-eX-fmC">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="rSs-c0-MuE" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Qh5-6B-eDE">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="DJ6-k9-FHu" kind="relationship" relationship="rootViewController" id="SlL-92-nXX"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xoR-sH-weV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="436" y="78"/>
         </scene>
     </scenes>
     <resources>
