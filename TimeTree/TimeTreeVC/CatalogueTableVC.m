@@ -50,9 +50,8 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
-    TimeTreeTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"TimeTreeVC"];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
 }
+
 
 @end

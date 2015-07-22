@@ -14,6 +14,13 @@
 #import "LoginViewController.h"
 #import "ViewController.h"
 
+
+
+#import "MenuTableViewController.h"
+#import "NavigationVC.h"
+#import "REFrostedViewController.h"
+#import "TimeTreeTableVC.h"
+
 @interface AppDelegate ()
 
 @end
@@ -59,8 +66,23 @@
     //
     [FBLoginView class];
     
+        
+    // Create content and menu controllers
+    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
+    TimeTreeTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"TimeTreeVC"];
 
+    NavigationVC *navigationController = [[NavigationVC alloc] initWithRootViewController:vc];
+    MenuTableViewController *menuController = [[MenuTableViewController alloc] initWithStyle:UITableViewStylePlain];
     
+    // Create frosted view controller
+    REFrostedViewController *frostedViewController = [[REFrostedViewController alloc] initWithContentViewController:navigationController menuViewController:menuController];
+    frostedViewController.direction = REFrostedViewControllerDirectionLeft;
+    frostedViewController.liveBlurBackgroundStyle = REFrostedViewControllerLiveBackgroundStyleLight;
+    frostedViewController.liveBlur = YES;
+    
+    self.window.rootViewController = frostedViewController;
+    [self.window makeKeyAndVisible];
+
     return YES;
     
 }
