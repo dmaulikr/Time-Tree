@@ -20,6 +20,7 @@
 #import "NavigationVC.h"
 #import "REFrostedViewController.h"
 #import "TimeTreeTableVC.h"
+#import "ContainerVC.h"
 
 @interface AppDelegate ()
 
@@ -68,8 +69,11 @@
     
         
     // Create content and menu controllers
+//    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
+//    TimeTreeTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"TimeTreeVC"];
+    
     UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
-    TimeTreeTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"TimeTreeVC"];
+    ContainerVC *vc=[sb instantiateViewControllerWithIdentifier:@"containerVC"];
 
     NavigationVC *navigationController = [[NavigationVC alloc] initWithRootViewController:vc];
     MenuTableViewController *menuController = [[MenuTableViewController alloc] initWithStyle:UITableViewStylePlain];
