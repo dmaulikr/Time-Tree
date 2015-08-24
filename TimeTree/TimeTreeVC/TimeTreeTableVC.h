@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TimeTreeTableVC : UITableViewController 
+@interface TimeTreeTableVC : UITableViewController <UIActionSheetDelegate>
+@property (strong,nonatomic) NSString *titleStr;
 
 @end
