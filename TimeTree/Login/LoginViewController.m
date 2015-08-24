@@ -19,12 +19,17 @@
 #import "CatalogueTableVC.h"
 #import "TimeTreeTableVC.h"
 
+#import "MenuTableViewController.h"
+#import "NavigationVC.h"
+#import "REFrostedViewController.h"
+#import "ContainerVC.h"
 
 
 
-@interface LoginViewController ()<CommsDelegate,FBLoginViewDelegate>
+@interface LoginViewController ()<CommsDelegate,FBLoginViewDelegate,REFrostedViewControllerDelegate>
 {
     NSUserDefaults *defaults;
+    NavigationVC *navigationController;
 }
 
 //@property (weak, nonatomic) IBOutlet FBSDKLoginButton *FBLogin_Btn;
@@ -36,7 +41,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+//
+//    // Create content and menu controllers
+//    navigationController = [[NavigationVC alloc] initWithRootViewController:[[TimeTreeTableVC alloc] init]];
+//    MenuTableViewController *menuController = [[MenuTableViewController alloc] initWithStyle:UITableViewStylePlain];
+//    
+//    // Create frosted view controller
+//    REFrostedViewController *frostedViewController = [[REFrostedViewController alloc] initWithContentViewController:navigationController menuViewController:menuController];
+//    frostedViewController.direction = REFrostedViewControllerDirectionLeft;
+//    frostedViewController.liveBlurBackgroundStyle = REFrostedViewControllerLiveBackgroundStyleLight;
+//    frostedViewController.liveBlur = YES;
+//    frostedViewController.delegate = self;
+
     
     // set up NSUserDefaults
     defaults=  [NSUserDefaults standardUserDefaults];
@@ -45,6 +61,8 @@
     self.fbLoginView1.publishPermissions=@[@"public_profile", @"email", @"user_friends"];
     
     self.fbLoginView1.delegate=self;
+    
+    
     
 }
 
@@ -76,7 +94,7 @@
             
             if (!onceToken) {
                 UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
-                TimeTreeTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"TimeTreeVC"];
+                ContainerVC *vc=[sb instantiateViewControllerWithIdentifier:@"containerVC"];
                 [self.navigationController pushViewController:vc animated:YES];
             }
         }
