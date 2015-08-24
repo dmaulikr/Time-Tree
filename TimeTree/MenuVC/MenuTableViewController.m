@@ -92,18 +92,19 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 0 && indexPath.row == 0) {
-        TimeTreeTableVC *homeViewController = [[TimeTreeTableVC alloc] init];
-        NavigationVC *navigationController = [[NavigationVC alloc] initWithRootViewController:homeViewController];
-        self.frostedViewController.contentViewController = navigationController;
-    } else {
-        TimeTreeTableVC *homeViewController = [[TimeTreeTableVC alloc] init];
-        NavigationVC *navigationController = [[NavigationVC alloc] initWithRootViewController:homeViewController];
-        self.frostedViewController.contentViewController = navigationController;
-    }
-    
-    [self.frostedViewController hideMenuViewController];
+#warning  block firstly
+//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    if (indexPath.section == 0 && indexPath.row == 0) {
+//        TimeTreeTableVC *homeViewController = [[TimeTreeTableVC alloc] init];
+//        NavigationVC *navigationController = [[NavigationVC alloc] initWithRootViewController:homeViewController];
+//        self.frostedViewController.contentViewController = navigationController;
+//    } else {
+//        TimeTreeTableVC *homeViewController = [[TimeTreeTableVC alloc] init];
+//        NavigationVC *navigationController = [[NavigationVC alloc] initWithRootViewController:homeViewController];
+//        self.frostedViewController.contentViewController = navigationController;
+//    }
+//    
+//    [self.frostedViewController hideMenuViewController];
 }
 
 #pragma mark -

@@ -50,6 +50,9 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+    
     [self.navigationController dismissViewControllerAnimated:NO completion:nil];
 }
 
