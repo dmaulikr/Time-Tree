@@ -31,21 +31,21 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen]bounds]];
+//    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen]bounds]];
     
-    UIStoryboard *MainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    UIStoryboard *MainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
 #warning need add instructionVC 到時再由instructionVC去trigger present loginVC
-    ViewController *instructionVC = [MainStoryboard instantiateViewControllerWithIdentifier:@"instructionVC"];
-    self.window.rootViewController = instructionVC;
+//    ViewController *instructionVC = [MainStoryboard instantiateViewControllerWithIdentifier:@"instructionVC"];
+//    self.window.rootViewController = instructionVC;
     
     // login VC
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Login" bundle:nil];
-    LoginViewController *loginVC = [storyboard instantiateViewControllerWithIdentifier:@"loginVC"];
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Login" bundle:nil];
+//    LoginViewController *loginVC = [storyboard instantiateViewControllerWithIdentifier:@"loginVC"];
     
-    [self.window makeKeyAndVisible];
+//    [self.window makeKeyAndVisible];
     
 #warning temp add present here , need modify when instructionVC get ready 
-    [self.window.rootViewController presentViewController:loginVC animated:YES completion:nil];
+//    [self.window.rootViewController presentViewController:loginVC animated:YES completion:nil];
 
     //
     [Parse enableLocalDatastore];
@@ -67,10 +67,8 @@
     //
     [FBLoginView class];
     
-        
+    /*
     // Create content and menu controllers
-//    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
-//    TimeTreeTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"TimeTreeVC"];
     
     UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
     ContainerVC *vc=[sb instantiateViewControllerWithIdentifier:@"containerVC"];
@@ -86,7 +84,9 @@
     
     self.window.rootViewController = frostedViewController;
     [self.window makeKeyAndVisible];
+     */
 
+    
     return YES;
     
 }
