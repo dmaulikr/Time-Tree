@@ -8,12 +8,15 @@
 
 #import "CatalogueTableVC.h"
 #import "TimeTreeTableVC.h"
+#import "CatalogueTableViewCell.h"
+#import "ContainerVC.h"
 
 
 
 @interface CatalogueTableVC ()
 {
 }
+@property (strong,nonatomic) NSMutableArray *catalogName;
 
 @end
 
@@ -21,7 +24,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
+    // hide navigation
+    self.navigationController.navigationBarHidden=YES;
+    
+    // catloag name data
+    NSArray *catalog=@[@"BOOKS",@"MOVIE",@"TRAVEL",@"FOOD",@"EVENT",@"+"];
+    self.catalogName=[[NSMutableArray alloc]initWithArray:catalog];
 
 }
 
@@ -39,21 +48,47 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    
     if (section==0) {
         return 1;
     }else if (section==1){
-        return 6;
+        return self.catalogName.count;
+    }
+    return 0;
+}
+
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *identifier = @"Cell";
+    CatalogueTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
+
+    if (cell == nil ) {
+        cell = [[CatalogueTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
-    return 0;
+    if (indexPath.section==0) {
+        // 留白
+        cell.nameLabel.text=@"";
+    }else if (indexPath.section==1){
+        cell.nameLabel.text=self.catalogName[indexPath.row];
+    }
+
+//    cell.itemLabel.font = [UIFont fontWithName:@"DFHeiStd-W3" size:18.0];//設定字體
+    
+    return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+    NSLog(@"user press index.row is %ld",(long)indexPath.row);
+    NSLog(@"catalog name is %@",self.catalogName[indexPath.row]);
     
     
-    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
+    ContainerVC *vc=[sb instantiateViewControllerWithIdentifier:@"containerVC"];
+    vc.timeTreeName=self.catalogName[indexPath.row];
+    self.navigationController.navigationBarHidden=NO;
+    [self.navigationController pushViewController:vc animated:YES];
+    
 }
 
 
