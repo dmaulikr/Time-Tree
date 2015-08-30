@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface ContainerVC : UIViewController
+@property (strong,nonatomic)NSString *timeTreeName;
 
 @end

@@ -10,7 +10,9 @@
 #import "NavigationVC.h"
 #import "popVC.h"
 #import "Parse/Parse.h"
+#import "CatalogueTableVC.h"
 
+#import "MenuTableViewController.h"
 
 @interface ContainerVC ()
 {
@@ -23,8 +25,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *rightLabel;
 @property (weak, nonatomic) IBOutlet UILabel *leftLabel;
 
-@property (strong,nonatomic)NSString *timeTreeName;
-@property (strong,nonatomic)NSMutableArray *treeNameArray;
 
 @end
 
@@ -35,7 +35,7 @@
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
                                                                              style:UIBarButtonItemStylePlain
-                                                                            target:(NavigationVC *)self.navigationController
+                                                                            target:(NavigationVC*)self.navigationController
                                                                             action:@selector(showMenu)];
     // years btn in navigation bar
     UIButton *yearsBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 50, 40)];
@@ -64,12 +64,18 @@
     self.topButtonScrollView.delegate = self;
     self.scrollView.delegate = self;
     
+    /*
     // PFUser
     user=[PFUser currentUser];
     
-    // init
-    self.treeNameArray=[[NSMutableArray alloc]init];
+    // create PFObject class ( user 關聯-> tree name )
+    //加入使用者從目錄選的第一個名字進來的name
 
+    PFObject *timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
+    timeTreeObj[@"user"]=user;
+    [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
+    [timeTreeObj saveInBackground];
+     */
 }
 
 - (void)didReceiveMemoryWarning {
@@ -80,6 +86,8 @@
 -(void)viewDidAppear:(BOOL)animated{
     
 }
+
+
 
 #pragma mark -button action
 -(void)yearSelector:(id)sender{
@@ -94,26 +102,20 @@
 
 -(void)addTimeTree{
     //ScrollView
-    CGFloat scrollViewWidth = self.topButtonScrollView.frame.size.width;
+//    CGFloat scrollViewWidth = self.topButtonScrollView.frame.size.width;
 //    self.scrollView.contentSize = CGSizeMake(scrollViewWidth*vcArray.count, self.scrollView.frame.size.height);
 
-    PFObject *timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
-    timeTreeObj[@"user"]=user;
-    
-    [self.treeNameArray addObject:self.timeTreeName];
-    
-//    timeTreeObj[@"tree_name"]=self.treeNameArray;
-    
     
     PFQuery *query = [PFQuery queryWithClassName:@"TimeTreeObj"];
-        [query getObjectInBackgroundWithId:user.objectId block:^(PFObject *TimeTreeObj, NSError *error) {
-            
-            [timeTreeObj addObjectsFromArray:self.treeNameArray forKey:@"tree_name"];
-            
-        }];
-    
-    [timeTreeObj saveInBackground];
-    
+    [query whereKey:@"user" equalTo:[PFUser currentUser]];
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject * timeTreeObj, NSError *error) {
+        if (!error) {
+            [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
+            [timeTreeObj saveInBackground];
+        } else {
+            NSLog(@"Add Catalogue Name Error: %@", error);
+        }
+    }];
     
  
 }
