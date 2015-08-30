@@ -17,6 +17,9 @@
 @interface ContainerVC ()
 {
     PFUser *user;
+    PFObject *timeTreeObj;
+    PFObject *treeContent;
+    NSMutableArray *vcArray;
     
 }
 @property (weak, nonatomic) IBOutlet UIScrollView *topButtonScrollView;
@@ -25,6 +28,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *rightLabel;
 @property (weak, nonatomic) IBOutlet UILabel *leftLabel;
 
+@property (strong,nonatomic) NSMutableArray *totalNameArray;
 
 @end
 
@@ -54,6 +58,76 @@
     UIBarButtonItem *add=[[UIBarButtonItem alloc]initWithCustomView:addBtn];
     self.navigationItem.rightBarButtonItems=@[add,leftFixedItem,years];
     
+    // PFUser
+    user=[PFUser currentUser];
+    
+    // create PFObject class ( user 關聯-> tree name )
+    // 加入使用者從目錄選的第一個名字進來的name
+    timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
+    timeTreeObj[@"user"]=user;
+    [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
+    
+    // Create the treeContent
+    treeContent = [PFObject objectWithClassName:@"treeContent"];
+    // Add a relation between the timeTreeObj and treeContent （樹名關聯->樹內容）
+    timeTreeObj[@"parent"] = treeContent;
+    
+    [timeTreeObj saveInBackgroundWithBlock:^(BOOL success,NSError *error){
+         if (success) {
+#warning  check totalNameArray is nil why?
+             // get totoal catalogue name
+             self.totalNameArray=[[NSMutableArray alloc]initWithArray:[self findCatalogueNameViaUser]];
+             //TopButtonScrollView
+             //頭尾加入 供無限循環
+             NSString *firstButtonName = self.totalNameArray[0];
+             NSString *lastByttonName = self.totalNameArray[self.totalNameArray.count-1];
+             [self.totalNameArray insertObject:lastByttonName atIndex:0];
+             [self.totalNameArray insertObject:firstButtonName atIndex:self.totalNameArray.count];
+             if (self.totalNameArray.count!=0) {
+                 NSLog(@"count is %lu",(unsigned long)self.totalNameArray.count);
+             }
+         }
+     }];
+    
+  
+
+    self.topButtonScrollView.pagingEnabled = YES;
+    self.topButtonScrollView.showsHorizontalScrollIndicator = NO;
+    self.topButtonScrollView.showsVerticalScrollIndicator = NO;
+    
+    
+ 
+    
+    
+    
+    // 產生ContainerView裡面的內容
+//    vcArray = [[NSMutableArray alloc] init];
+//    
+//    UIStoryboard *sb = self.storyboard;
+//    for (NSString *categoryId in self.totalNameArray) {
+//        
+//        if ([HOLA_PERFECT_URL isEqualToString:HOLA_PERFECT_TEST]) {
+//            
+//            NewsCategoryListViewController *vc = [sb instantiateViewControllerWithIdentifier:@"NewsCategoryListView"];
+//            NSArray *tempArray = [SQLiteManager getNewsListDataByCategoryId:categoryId date:dateStrFormate];
+//            vc.arrayData = tempArray;
+//            
+//            [self addChildViewController:vc];
+//            [vcArray addObject:vc];
+//        }
+//        else
+//        {
+//            NewsCategoryListViewController *vc = [sb instantiateViewControllerWithIdentifier:@"NewsCategoryListView"];
+//            NSArray *tempArray = [SQLiteManager getNewsListDataByCategoryId:categoryId];
+//            vc.arrayData = tempArray;
+//            
+//            [self addChildViewController:vc];
+//            [vcArray addObject:vc];
+//            
+//        }
+//    }
+    
+    
     // scrollView setting
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
@@ -64,18 +138,8 @@
     self.topButtonScrollView.delegate = self;
     self.scrollView.delegate = self;
     
-    /*
-    // PFUser
-    user=[PFUser currentUser];
     
-    // create PFObject class ( user 關聯-> tree name )
-    //加入使用者從目錄選的第一個名字進來的name
-
-    PFObject *timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
-    timeTreeObj[@"user"]=user;
-    [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
-    [timeTreeObj saveInBackground];
-     */
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -84,9 +148,31 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    
+  
 }
 
+-(NSArray*)findCatalogueNameViaUser{
+    
+    NSMutableArray *nameArray=[[NSMutableArray alloc]init];
+    PFQuery *pq=[PFQuery queryWithClassName:@"TimeTreeObj"];
+    [pq whereKey:@"user" equalTo:[PFUser currentUser]];
+    [pq findObjectsInBackgroundWithBlock:^(NSArray *objectArray , NSError *error){
+        if (!error) {
+            
+            for (PFObject *pfObject in objectArray) {
+                NSString *tempName=[pfObject objectForKey:@"tree_name"];
+                [nameArray addObject:tempName];
+                NSLog(@"pfobject is %@",nameArray);
+            }
+            
+        }else{
+            NSLog(@"get total name error is %@",error);
+        }
+        
+    }];
+    
+    return nameArray;
+}
 
 
 #pragma mark -button action
@@ -105,18 +191,29 @@
 //    CGFloat scrollViewWidth = self.topButtonScrollView.frame.size.width;
 //    self.scrollView.contentSize = CGSizeMake(scrollViewWidth*vcArray.count, self.scrollView.frame.size.height);
 
+#warning  會蓋掉之前的name , 應該寫在修改名稱
+//    PFQuery *query = [PFQuery queryWithClassName:@"TimeTreeObj"];
+//    [query whereKey:@"user" equalTo:[PFUser currentUser]];
+//    [query getFirstObjectInBackgroundWithBlock:^(PFObject * timeTreeObj, NSError *error) {
+//        if (!error) {
+//            [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
+//            [timeTreeObj saveInBackground];
+//        } else {
+//            NSLog(@"Add Catalogue Name Error: %@", error);
+//        }
+//    }];
     
-    PFQuery *query = [PFQuery queryWithClassName:@"TimeTreeObj"];
-    [query whereKey:@"user" equalTo:[PFUser currentUser]];
-    [query getFirstObjectInBackgroundWithBlock:^(PFObject * timeTreeObj, NSError *error) {
-        if (!error) {
-            [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
-            [timeTreeObj saveInBackground];
-        } else {
-            NSLog(@"Add Catalogue Name Error: %@", error);
-        }
-    }];
+    // 新增樹名
+    timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
+    timeTreeObj[@"user"]=user;
+    [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
     
+    // Create the treeContent
+    treeContent = [PFObject objectWithClassName:@"treeContent"];
+    // Add a relation between the timeTreeObj and treeContent （樹名關聯->樹內容）
+    timeTreeObj[@"parent"] = treeContent;
+    
+    [timeTreeObj saveInBackground];
  
 }
 
