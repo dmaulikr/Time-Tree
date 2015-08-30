@@ -30,6 +30,7 @@
 {
     NSUserDefaults *defaults;
     NavigationVC *navigationController;
+    ContainerVC *containerVC;
 }
 
 //@property (weak, nonatomic) IBOutlet FBSDKLoginButton *FBLogin_Btn;
@@ -41,19 +42,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//
-//    // Create content and menu controllers
-//    navigationController = [[NavigationVC alloc] initWithRootViewController:[[TimeTreeTableVC alloc] init]];
-//    MenuTableViewController *menuController = [[MenuTableViewController alloc] initWithStyle:UITableViewStylePlain];
-//    
-//    // Create frosted view controller
-//    REFrostedViewController *frostedViewController = [[REFrostedViewController alloc] initWithContentViewController:navigationController menuViewController:menuController];
-//    frostedViewController.direction = REFrostedViewControllerDirectionLeft;
-//    frostedViewController.liveBlurBackgroundStyle = REFrostedViewControllerLiveBackgroundStyleLight;
-//    frostedViewController.liveBlur = YES;
-//    frostedViewController.delegate = self;
 
-    
     // set up NSUserDefaults
     defaults=  [NSUserDefaults standardUserDefaults];
 
@@ -61,8 +50,6 @@
     self.fbLoginView1.publishPermissions=@[@"public_profile", @"email", @"user_friends"];
     
     self.fbLoginView1.delegate=self;
-    
-    
     
 }
 
@@ -87,15 +74,25 @@
             
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken,^{
-                UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Login" bundle:nil];
-                CatalogueTableVC *vc=[sb instantiateViewControllerWithIdentifier:@"GoCatalogueTVC"];
-                [self.navigationController pushViewController:vc animated:YES];
+                NSString *strTag=@"pushToCatalog";
+                [defaults setObject:strTag forKey:@"pushToCatalog"];
+                [defaults synchronize];
+                // dismiss 畫面拿掉剩viewController
+                [self dismissViewControllerAnimated:NO completion:nil];
             });
             
             if (!onceToken) {
                 UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
                 ContainerVC *vc=[sb instantiateViewControllerWithIdentifier:@"containerVC"];
+                self.navigationController.navigationBarHidden=NO;
                 [self.navigationController pushViewController:vc animated:YES];
+                
+                NSString *strTag=@"pushToTT";
+                [defaults setObject:strTag forKey:@"pushToTT"];
+                [defaults synchronize];
+                // dismiss 畫面拿掉剩viewController
+                [self dismissViewControllerAnimated:NO completion:nil];
+                
             }
         }
         else{
