@@ -10,6 +10,7 @@
 #import "TimeTreeTableVC.h"
 #import "CatalogueTableViewCell.h"
 #import "ContainerVC.h"
+#import "ContentVC.h"
 
 
 
@@ -83,11 +84,20 @@
     NSLog(@"catalog name is %@",self.catalogName[indexPath.row]);
     
     
-    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
-    ContainerVC *vc=[sb instantiateViewControllerWithIdentifier:@"containerVC"];
+//    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
+//    ContainerVC *vc=[sb instantiateViewControllerWithIdentifier:@"containerVC"];
+//    vc.timeTreeName=self.catalogName[indexPath.row];
+//    self.navigationController.navigationBarHidden=NO;
+//    [self.navigationController pushViewController:vc animated:YES];
+    
+    
+    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Content" bundle:nil];
+    ContentVC *vc=[sb instantiateViewControllerWithIdentifier:@"contentVC"];
     vc.timeTreeName=self.catalogName[indexPath.row];
-    self.navigationController.navigationBarHidden=NO;
+    vc.cataStr=self.catalogName[indexPath.row];
+    self.navigationController.navigationBarHidden=YES;
     [self.navigationController pushViewController:vc animated:YES];
+    
     
 }
 
