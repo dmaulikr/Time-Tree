@@ -11,17 +11,19 @@
 #import "popVC.h"
 #import "Parse/Parse.h"
 #import "CatalogueTableVC.h"
-
+#import "data.h"
 #import "MenuTableViewController.h"
+#import "TimeTreeTableVC.h"
 
 @interface ContainerVC ()
 {
-    PFUser *user;
+//    PFUser *user;
     PFObject *timeTreeObj;
     PFObject *treeContent;
-    NSMutableArray *vcArray;
+    data *dataClass;
     
 }
+@property (strong,nonatomic) PFUser *user;
 @property (weak, nonatomic) IBOutlet UIScrollView *topButtonScrollView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
@@ -29,6 +31,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *leftLabel;
 
 @property (strong,nonatomic) NSMutableArray *totalNameArray;
+@property (strong,nonatomic) NSMutableArray *vcArray;
+
 
 @end
 
@@ -59,74 +63,10 @@
     self.navigationItem.rightBarButtonItems=@[add,leftFixedItem,years];
     
     // PFUser
-    user=[PFUser currentUser];
+    self.user=[PFUser currentUser];
     
-    // create PFObject class ( user 關聯-> tree name )
-    // 加入使用者從目錄選的第一個名字進來的name
-    timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
-    timeTreeObj[@"user"]=user;
-    [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
-    
-    // Create the treeContent
-    treeContent = [PFObject objectWithClassName:@"treeContent"];
-    // Add a relation between the timeTreeObj and treeContent （樹名關聯->樹內容）
-    timeTreeObj[@"parent"] = treeContent;
-    
-    [timeTreeObj saveInBackgroundWithBlock:^(BOOL success,NSError *error){
-         if (success) {
-#warning  check totalNameArray is nil why?
-             // get totoal catalogue name
-             self.totalNameArray=[[NSMutableArray alloc]initWithArray:[self findCatalogueNameViaUser]];
-             //TopButtonScrollView
-             //頭尾加入 供無限循環
-             NSString *firstButtonName = self.totalNameArray[0];
-             NSString *lastByttonName = self.totalNameArray[self.totalNameArray.count-1];
-             [self.totalNameArray insertObject:lastByttonName atIndex:0];
-             [self.totalNameArray insertObject:firstButtonName atIndex:self.totalNameArray.count];
-             if (self.totalNameArray.count!=0) {
-                 NSLog(@"count is %lu",(unsigned long)self.totalNameArray.count);
-             }
-         }
-     }];
-    
-  
-
-    self.topButtonScrollView.pagingEnabled = YES;
-    self.topButtonScrollView.showsHorizontalScrollIndicator = NO;
-    self.topButtonScrollView.showsVerticalScrollIndicator = NO;
-    
-    
- 
-    
-    
-    
-    // 產生ContainerView裡面的內容
-//    vcArray = [[NSMutableArray alloc] init];
-//    
-//    UIStoryboard *sb = self.storyboard;
-//    for (NSString *categoryId in self.totalNameArray) {
-//        
-//        if ([HOLA_PERFECT_URL isEqualToString:HOLA_PERFECT_TEST]) {
-//            
-//            NewsCategoryListViewController *vc = [sb instantiateViewControllerWithIdentifier:@"NewsCategoryListView"];
-//            NSArray *tempArray = [SQLiteManager getNewsListDataByCategoryId:categoryId date:dateStrFormate];
-//            vc.arrayData = tempArray;
-//            
-//            [self addChildViewController:vc];
-//            [vcArray addObject:vc];
-//        }
-//        else
-//        {
-//            NewsCategoryListViewController *vc = [sb instantiateViewControllerWithIdentifier:@"NewsCategoryListView"];
-//            NSArray *tempArray = [SQLiteManager getNewsListDataByCategoryId:categoryId];
-//            vc.arrayData = tempArray;
-//            
-//            [self addChildViewController:vc];
-//            [vcArray addObject:vc];
-//            
-//        }
-//    }
-    
+    // get name , 上方 TopButtonScrollView 頭尾加入 供無限循環
+    [self getNameData];
     
     // scrollView setting
     self.scrollView.pagingEnabled = YES;
@@ -137,9 +77,6 @@
     // scrollView delegate
     self.topButtonScrollView.delegate = self;
     self.scrollView.delegate = self;
-    
-    
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -148,32 +85,184 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-  
+    [super viewDidAppear:animated];
 }
 
--(NSArray*)findCatalogueNameViaUser{
+-(void)getNameData{
     
-    NSMutableArray *nameArray=[[NSMutableArray alloc]init];
-    PFQuery *pq=[PFQuery queryWithClassName:@"TimeTreeObj"];
-    [pq whereKey:@"user" equalTo:[PFUser currentUser]];
-    [pq findObjectsInBackgroundWithBlock:^(NSArray *objectArray , NSError *error){
-        if (!error) {
+    __weak ContainerVC *this=self;
+    dataClass=[[data alloc]init];
+    dataClass.dataBlock=^(NSArray *nameArray){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"call back name are %@",nameArray);
             
-            for (PFObject *pfObject in objectArray) {
-                NSString *tempName=[pfObject objectForKey:@"tree_name"];
-                [nameArray addObject:tempName];
-                NSLog(@"pfobject is %@",nameArray);
+            // init
+            this.totalNameArray=[[NSMutableArray alloc]initWithArray:nameArray];
+            
+            if (this.totalNameArray.count>=2) {
+                //TopButtonScrollView
+                //頭尾加入 供無限循環
+                NSString *firstButtonName = this.totalNameArray[0];
+                NSString *lastByttonName = this.totalNameArray[self.totalNameArray.count-1];
+                [this.totalNameArray insertObject:lastByttonName atIndex:0];
+                [this.totalNameArray insertObject:firstButtonName atIndex:this.totalNameArray.count];
+                
+                if (self.totalNameArray.count!=0) {
+                    NSLog(@"add first and last name count is %lu , content is %@",(unsigned long)this.totalNameArray.count,this.totalNameArray);
+                    [this topScrollViewSetup:1];
+                    [this getTableViewData];
+                    [this buttonScrollViewSetup];
+                }
+            }else{
+                //需判斷只有一個的話 ，先不用加循環 , 傳0給起始位置
+                [this topScrollViewSetup:0];
+                [this getTableViewData];
+                [this buttonScrollViewSetup];
             }
             
-        }else{
-            NSLog(@"get total name error is %@",error);
-        }
-        
-    }];
+        });
+    };
     
-    return nameArray;
+    dataClass.loadDataFail=^(NSError *error){
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:nil message:error.description delegate:this cancelButtonTitle:@"確認" otherButtonTitles:nil];
+        [av show];
+    };
+    [dataClass findCatalogueNameViaUser];
 }
 
+-(void)topScrollViewSetup:(NSInteger)x{
+    
+    CGFloat topScrollWidth=self.topButtonScrollView.frame.size.width;
+    CGFloat topScrollHeight=self.topButtonScrollView.frame.size.height;
+    
+    self.topButtonScrollView.pagingEnabled = YES;
+    self.topButtonScrollView.showsHorizontalScrollIndicator = NO;
+    self.topButtonScrollView.showsVerticalScrollIndicator = NO;
+    
+    self.topButtonScrollView.contentSize=CGSizeMake(topScrollWidth*self.totalNameArray.count,topScrollHeight);
+    for (NSInteger i=0; i<self.totalNameArray.count; i++) {
+        UIButton *btn=[[UIButton alloc]initWithFrame:CGRectMake(topScrollWidth*i, 0, topScrollWidth, topScrollHeight)];
+        [btn setTitle:self.totalNameArray[i] forState:UIControlStateNormal];
+        [self.topButtonScrollView addSubview:btn];
+    }
+    //起始位置
+    [self.topButtonScrollView scrollRectToVisible:CGRectMake(topScrollWidth*x, 0, topScrollWidth,topScrollHeight) animated:NO];
+
+}
+
+-(void)buttonScrollViewSetup{
+    
+    CGFloat scrollWidth=self.scrollView.frame.size.width;
+    CGFloat scrollHeight=self.scrollView.frame.size.height;
+    
+    //ScrollView
+    self.scrollView.contentSize = CGSizeMake(scrollWidth*self.vcArray.count, scrollHeight);
+    
+    for (NSInteger i = 0; i<self.vcArray.count; i++) {
+        TimeTreeTableVC *vc = self.vcArray[i];
+        vc.view.frame = CGRectMake(scrollWidth*i, 0, scrollWidth, self.scrollView.frame.size.height);
+        [self.scrollView addSubview:vc.view];
+    }
+    [self.scrollView scrollRectToVisible:CGRectMake(scrollWidth*1, 0, scrollWidth, self.scrollView.frame.size.height) animated:NO];
+}
+
+-(void)getTableViewData{
+    // 產生ContainerView裡面的內容
+    self.vcArray = [[NSMutableArray alloc] init];
+    
+    UIStoryboard *sb = self.storyboard;
+#warning to do nameArray count 跟 parse 裡的數量需一致 , 需要另外加id ?
+    for (NSString *treeName in self.totalNameArray) {
+        TimeTreeTableVC *vc = [sb instantiateViewControllerWithIdentifier:@"TimeTreeVC"];
+        
+        // get data from parse
+        PFQuery *pq=[PFQuery queryWithClassName:@"TimeTreeObj"];
+        [pq whereKey:@"user" equalTo:self.user];
+        [pq findObjectsInBackgroundWithBlock:^(NSArray *obj , NSError *error){
+            if (!error) {
+                vc.dataObject=obj;
+//                PFObject *pfObject=[obj lastObject];
+//                NSString *pfStr=[pfObject objectForKey:@"treeContent"] ;
+//                NSLog(@"----%@",pfStr);
+            }
+            else{
+                NSLog(@"fetch tree content error %@",error);
+            }
+            
+        }];
+        
+        [self addChildViewController:vc];
+        [self.vcArray addObject:vc];
+        
+    }
+
+}
+
+#pragma mark - Scroll Delegate
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    
+    if (scrollView.tag == 100) {
+        //上方ButtonScrollView
+        CGRect rect = self.topButtonScrollView.frame;
+        
+        //切換ButtonView 做循環
+        if (scrollView.contentOffset.x == 0) {
+            [scrollView scrollRectToVisible:CGRectMake(rect.size.width*(self.totalNameArray.count-2), 0, rect.size.width, rect.size.height) animated:NO];
+        }else if(scrollView.contentOffset.x == rect.size.width*(self.totalNameArray.count-1)) {
+            [scrollView scrollRectToVisible:CGRectMake(rect.size.width, 0, rect.size.width, rect.size.height) animated:NO];
+        }
+//        
+//        //換標簽
+//        NSInteger index = scrollView.contentOffset.x/rect.size.width;
+//        NSLog(@"換到第幾個標簽 -- %zd", index);
+//        [self changeLable:index];
+//        
+//        //連動下方scrollView
+//        CGRect bottomRect = self.scrollView.frame;
+//        [self.scrollView scrollRectToVisible:CGRectMake(bottomRect.size.width*currentButtonIndex, 0, bottomRect.size.width, bottomRect.size.height) animated:NO];
+        
+    }else {
+//        //下方內容ScrollView
+//        
+//        //切換ScrollView 做循環
+//        CGRect rect = self.scrollView.frame;
+//        if (scrollView.contentOffset.x == 0) {
+//            [scrollView scrollRectToVisible:CGRectMake(rect.size.width*(vcArray.count-2), 0, rect.size.width, rect.size.height) animated:NO];
+//        }else if(scrollView.contentOffset.x == rect.size.width*(vcArray.count-1)) {
+//            [scrollView scrollRectToVisible:CGRectMake(rect.size.width, 0, rect.size.width, rect.size.height) animated:NO];
+//        }
+//        
+//        [self changeLable:scrollView.contentOffset.x/rect.size.width];
+//        
+//        //連動上方按鈕ScrollView
+//        CGRect topRect = self.topButtonScrollView.frame;
+//        [self.topButtonScrollView scrollRectToVisible:CGRectMake(topRect.size.width*currentButtonIndex, 0, topRect.size.width, topRect.size.height) animated:NO];
+//        
+        
+    }
+    
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+//    if (scrollView.tag == 100) {
+//        CGRect rect = self.topButtonScrollView.frame;
+//        CGFloat offset = rect.size.width*currentButtonIndex - scrollView.contentOffset.x;
+//        //NSLog(@"位移量 -- (%f)", offset);
+//        
+//        //開始位移
+//        self.rightLabelConstraint.constant = 20 - offset;
+//        self.leftLabelConstraint.constant = 20 + offset;
+//        
+//        //位移大出畫面一半大就回到原點
+//        if (fabs(offset) >= rect.size.width/2) {
+//            self.rightLabelConstraint.constant = 20;
+//            self.leftLabelConstraint.constant = 20;
+//        }
+//        
+//    }
+    
+}
 
 #pragma mark -button action
 -(void)yearSelector:(id)sender{
@@ -205,7 +294,7 @@
     
     // 新增樹名
     timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
-    timeTreeObj[@"user"]=user;
+    timeTreeObj[@"user"]=self.user;
     [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
     
     // Create the treeContent

@@ -55,8 +55,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-//    return self.tempArray.count;
-    return 3;
+    NSLog(@"i have number of rows %lu",(unsigned long)self.dataObject.count);
+    return self.dataObject.count;
 }
 
 //- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section

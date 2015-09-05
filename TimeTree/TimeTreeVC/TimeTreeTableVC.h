@@ -10,5 +10,5 @@
 
 @interface TimeTreeTableVC : UITableViewController <UIActionSheetDelegate>
 @property (strong,nonatomic) NSString *titleStr;
-
+@property (strong,nonatomic) NSArray *dataObject;
 @end
