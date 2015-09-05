@@ -12,6 +12,7 @@
 #import "Utility.h"
 #import "ParallaxHeaderView.h"
 #import "Parse/Parse.h"
+#import "ContainerVC.h"
 
 
 @interface ContentVC ()
@@ -47,8 +48,8 @@
     // tap gesture
     UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
     [self.view addGestureRecognizer:tapGesture];
-    [self eventAlertView];
-    
+#warning thinking 好像直接寫就好不用跳個view出來
+//    [self eventAlertView];
     
     
 }
@@ -56,6 +57,7 @@
     [super viewDidAppear:animated];
     [(ParallaxHeaderView *)self.tableView.tableHeaderView refreshBlurViewForNewImage];
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -92,20 +94,19 @@
 }
 
 #pragma mark - action
--(void)eventAlertView{
-
-    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Content" bundle:nil];
-    EventVC *vc=[sb instantiateViewControllerWithIdentifier:@"eventVC"];
-    [self addChildViewController:vc];
-    [vc.view setBackgroundColor:[UIColor whiteColor]];
-//    vc.view.frame = CGRectMake(0, 0, 250, 150);
-    vc.evenLabel.text=self.cataStr;
-    vc.view.center = self.view.center;
-    [vc.view.layer setBorderWidth:1];
-    [vc.view.layer setBorderColor:[UIColor grayColor].CGColor];
-    [vc.view.layer setCornerRadius:8];
-    [self.view addSubview:vc.view];    
-}
+//-(void)eventAlertView{
+//
+//    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Content" bundle:nil];
+//    EventVC *vc=[sb instantiateViewControllerWithIdentifier:@"eventVC"];
+//    [self addChildViewController:vc];
+//    [vc.view setBackgroundColor:[UIColor whiteColor]];
+//    vc.evenLabel.text=self.cataStr;
+//    vc.view.center = self.view.center;
+//    [vc.view.layer setBorderWidth:1];
+//    [vc.view.layer setBorderColor:[UIColor grayColor].CGColor];
+//    [vc.view.layer setCornerRadius:8];
+//    [self.view addSubview:vc.view];    
+//}
 
 -(void)tap:(id)sender{
     [self.view endEditing:YES];
@@ -114,6 +115,25 @@
 - (IBAction)photoAction:(id)sender {
     UIActionSheet *actionSheet =[[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take photo",@"Use album photo", nil];
     [actionSheet showInView:self.view];
+}
+
+- (IBAction)saveGo2NextView:(id)sender {
+    // get textField and save to parse
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:
+                             [NSIndexPath indexPathForRow:0 inSection:0]];
+    UITextField *textField = (UITextField *)[cell.contentView viewWithTag:100];
+    NSLog(@"text is %@",textField.text);
+    
+    // save to parse
+    treeContent[@"content"]=textField.text;
+#warning thinking save to PFFile ? text ?
+    [treeContent saveInBackground];
+    
+    // push to container
+    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
+    ContainerVC *vc=[sb instantiateViewControllerWithIdentifier:@"containerVC"];
+    self.navigationController.navigationBarHidden=NO;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 
@@ -153,18 +173,22 @@
     }
     self.img=image;
     headerView.headerImage = self.img;
-#warning 圖片似乎要解壓縮，不然會大
+    
+#warning to do 圖片似乎要解壓縮，不然會大
     // pic to NSData -> PFFile
     NSData *picData=UIImagePNGRepresentation(self.img);
     PFFile *imgFile=[PFFile fileWithData:picData];
     treeContent[@"treeEventImgFile"]=imgFile;
-#warning 內容圖片要加入不重複存
-    [imgFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        // Handle success or failure here ...
-    } progressBlock:^(int percentDone) {
-        // Update your progress spinner here. percentDone will be between 0 and 100.
-        NSLog(@"percentage %d",percentDone);
-    }];
+    
+#warning to do 內容圖片要加入不重複存
+    [treeContent saveInBackground];
+    
+//    [imgFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//        // Handle success or failure here ...
+//    } progressBlock:^(int percentDone) {
+//        // Update your progress spinner here. percentDone will be between 0 and 100.
+//        NSLog(@"percentage %d",percentDone);
+//    }];
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -191,11 +215,11 @@
     NSString *date=[self dateIs];
     
     cell.date.text=date;
-    
+
+    [cell.saveBtn addTarget:self action:@selector(saveGo2NextView:) forControlEvents:UIControlEventTouchUpInside];
     return cell;
 }
 
-#pragma mark - tableView delegate
 
 #pragma mark UISCrollViewDelegate
 
@@ -207,5 +231,6 @@
         [(ParallaxHeaderView *)self.tableView.tableHeaderView layoutHeaderViewForScrollViewOffset:scrollView.contentOffset];
     }
 }
+
 
 @end

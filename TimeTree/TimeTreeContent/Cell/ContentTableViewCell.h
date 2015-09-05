@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ContentTableViewCell : UITableViewCell
+@interface ContentTableViewCell : UITableViewCell <UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *date;
 @property (weak, nonatomic) IBOutlet UITextView *contentText;
+@property (weak, nonatomic) IBOutlet UIButton *saveBtn;
 
 @end

@@ -12,6 +12,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
+    self.contentText.delegate=self;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -19,5 +20,6 @@
 
     // Configure the view for the selected state
 }
+
 
 @end
