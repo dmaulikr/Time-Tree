@@ -13,5 +13,6 @@
 #define FB_GRAPH @"https://graph.facebook.com/"
 #define FB_PROFILE_IMG @"/picture?width=100&height=100"
 
+#define TIMETREEOBJ @"timeTreeObj"
 
 @end
