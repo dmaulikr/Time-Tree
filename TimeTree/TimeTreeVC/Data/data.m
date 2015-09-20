@@ -17,6 +17,7 @@
     NSMutableArray *nameArray=[[NSMutableArray alloc]init];
     PFUser *user=[PFUser currentUser];
     NSString *username=[user objectForKey:@"username"];
+    
     PFQuery *pq=[PFQuery queryWithClassName:@"TimeTreeObj"];
     [pq whereKey:@"user" equalTo:user];
     [pq findObjectsInBackgroundWithBlock:^(NSArray *objectArray , NSError *error){

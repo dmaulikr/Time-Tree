@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface ContentVC : UIViewController <UITableViewDataSource,UITableViewDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate>
-@property (strong,nonatomic)NSString *cataStr;
 @property (strong,nonatomic)NSString *timeTreeName;
 
 @end

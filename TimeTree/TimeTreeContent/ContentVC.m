@@ -13,7 +13,7 @@
 #import "ParallaxHeaderView.h"
 #import "Parse/Parse.h"
 #import "ContainerVC.h"
-
+#import "DataTimeTreeObj.h"
 
 @interface ContentVC ()
 {
@@ -32,7 +32,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+#warning thinking 需要加tag only for 第一次進來
     [self parseClassCreate];
     
     // Create ParallaxHeaderView with specified size, and set it as uitableView Header, that's it
@@ -79,18 +79,39 @@
     // PFUser
     user=[PFUser currentUser];
     
-    // create PFObject class ( user 關聯-> tree name )
-    // 加入使用者從目錄選的第一個名字進來的name
+    // create PFObject class
     timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
+    // timeTreeObj 關聯到 user
     timeTreeObj[@"user"]=user;
+    // 加入使用者從目錄選的第一個名字進來的name
     [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
     
-    // Create the treeContent
+    // Create the treeContent class
     treeContent = [PFObject objectWithClassName:@"treeContent"];
-    // Add a relation between the timeTreeObj and treeContent （樹名關聯->樹內容）
+    // Add a relation between the timeTreeObj and treeContent （timeTreeObj obj關聯->樹內容）
     timeTreeObj[@"treeContent"] = treeContent;
     [timeTreeObj saveInBackground];
+    
+    /*
+    [timeTreeObj saveInBackgroundWithBlock:^(BOOL finishSave,NSError *error){
+        
+        if (finishSave) {
+//            NSString *timeTreeObjId=timeTreeObj.objectId;
+// save to array in other class
 
+#warning to do , 增加樹的那邊也需save id
+            //存整包物件
+            DataTimeTreeObj *dataObj=[[DataTimeTreeObj alloc]initObj:timeTreeObj];
+            [DataTimeTreeObj saveTimeTreeObj:dataObj];
+        }
+        
+        
+        if (error) {
+            UIAlertView *av=[[UIAlertView alloc]initWithTitle:nil message:error.description delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [av show];
+        }
+    }];
+     */
 }
 
 #pragma mark - action
@@ -128,7 +149,8 @@
     treeContent[@"content"]=textField.text;
 #warning thinking save to PFFile ? text ?
     [treeContent saveInBackground];
-    
+
+#warning thinking 第一次for push 之後應該dismiss就好？
     // push to container
     UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
     ContainerVC *vc=[sb instantiateViewControllerWithIdentifier:@"containerVC"];

@@ -14,14 +14,13 @@
 #import "data.h"
 #import "MenuTableViewController.h"
 #import "TimeTreeTableVC.h"
+#import "DataTimeTreeObj.h"
 
 @interface ContainerVC ()
 {
-//    PFUser *user;
     PFObject *timeTreeObj;
     PFObject *treeContent;
     data *dataClass;
-    
 }
 @property (strong,nonatomic) PFUser *user;
 @property (weak, nonatomic) IBOutlet UIScrollView *topButtonScrollView;
@@ -172,18 +171,26 @@
     
     UIStoryboard *sb = self.storyboard;
 #warning to do nameArray count 跟 parse 裡的數量需一致 , 需要另外加id ?
-    for (NSString *treeName in self.totalNameArray) {
+//    for (NSString *treeName in self.totalNameArray) {
         TimeTreeTableVC *vc = [sb instantiateViewControllerWithIdentifier:@"TimeTreeVC"];
         
         // get data from parse
         PFQuery *pq=[PFQuery queryWithClassName:@"TimeTreeObj"];
+        NSArray *tempArray=[DataTimeTreeObj getTimeTreeObj];
+        for (NSInteger i; i<tempArray.count; i++) {
+            
+        [pq whereKey:timeTreeObj.objectId
+                equalTo:[tempArray[i]objectForKey:@"objectId"]];
+
         [pq whereKey:@"user" equalTo:self.user];
-        [pq findObjectsInBackgroundWithBlock:^(NSArray *obj , NSError *error){
+        [pq getFirstObjectInBackgroundWithBlock:^(PFObject *obj , NSError *error){
             if (!error) {
-                vc.dataObject=obj;
+//                vc.dataObject=obj;
 //                PFObject *pfObject=[obj lastObject];
-//                NSString *pfStr=[pfObject objectForKey:@"treeContent"] ;
-//                NSLog(@"----%@",pfStr);
+                NSString *pfStr=[obj objectForKey:@"treeContent"] ;
+                NSLog(@"obj----%@",obj);
+                NSLog(@"pfStr----%@",pfStr);
+
             }
             else{
                 NSLog(@"fetch tree content error %@",error);
