@@ -15,6 +15,8 @@
 #import "MenuTableViewController.h"
 #import "TimeTreeTableVC.h"
 #import "DataTimeTreeObj.h"
+#import "MBProgressHUD.h"
+#import "ContentVC.h"
 
 @interface ContainerVC ()
 {
@@ -23,13 +25,10 @@
     data *dataClass;
 }
 @property (strong,nonatomic) PFUser *user;
-@property (weak, nonatomic) IBOutlet UIScrollView *topButtonScrollView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
-@property (weak, nonatomic) IBOutlet UILabel *rightLabel;
-@property (weak, nonatomic) IBOutlet UILabel *leftLabel;
 
-@property (strong,nonatomic) NSMutableArray *totalNameArray;
+@property (strong,nonatomic) NSMutableArray *totalTreeArray;
 @property (strong,nonatomic) NSMutableArray *vcArray;
 
 
@@ -55,7 +54,7 @@
     
     // add tree or event button
     UIButton *addBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
-    [addBtn addTarget:self action:@selector(addTreeOrEvent:) forControlEvents:UIControlEventTouchUpInside];
+    [addBtn addTarget:self action:@selector(addTree:) forControlEvents:UIControlEventTouchUpInside];
     [addBtn setBackgroundColor:[UIColor blackColor]];
     [addBtn setTitle:@"＋" forState:UIControlStateNormal];
     UIBarButtonItem *add=[[UIBarButtonItem alloc]initWithCustomView:addBtn];
@@ -64,18 +63,12 @@
     // PFUser
     self.user=[PFUser currentUser];
     
-    // get name , 上方 TopButtonScrollView 頭尾加入 供無限循環
-    [self getNameData];
-    
-    // scrollView setting
-    self.scrollView.pagingEnabled = YES;
-    self.scrollView.showsHorizontalScrollIndicator = NO;
-    self.scrollView.showsVerticalScrollIndicator = NO;
-    self.scrollView.backgroundColor=[UIColor darkGrayColor];
+    // get tree obj data , TscrollView 頭尾加入 供無限循環
+    [self getTreeObjData];
     
     // scrollView delegate
-    self.topButtonScrollView.delegate = self;
     self.scrollView.delegate = self;
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -87,36 +80,36 @@
     [super viewDidAppear:animated];
 }
 
--(void)getNameData{
-    
+-(void)getTreeObjData{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText=@"loading";
+    [hud show:YES];
     __weak ContainerVC *this=self;
     dataClass=[[data alloc]init];
-    dataClass.dataBlock=^(NSArray *nameArray){
+    dataClass.dataBlock=^(NSArray *treeObjArray){
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"call back name are %@",nameArray);
-            
+            [hud hide:YES];
             // init
-            this.totalNameArray=[[NSMutableArray alloc]initWithArray:nameArray];
-            
-            if (this.totalNameArray.count>=2) {
-                //TopButtonScrollView
+            this.totalTreeArray=[[NSMutableArray alloc]initWithArray:treeObjArray];
+
+            if (treeObjArray.count>=2) {
+                //TreeScrollView
                 //頭尾加入 供無限循環
-                NSString *firstButtonName = this.totalNameArray[0];
-                NSString *lastByttonName = this.totalNameArray[self.totalNameArray.count-1];
-                [this.totalNameArray insertObject:lastByttonName atIndex:0];
-                [this.totalNameArray insertObject:firstButtonName atIndex:this.totalNameArray.count];
+                DataTimeTreeObj *firstTree = treeObjArray[0];
+                DataTimeTreeObj *lastTree = treeObjArray[treeObjArray.count-1];
                 
-                if (self.totalNameArray.count!=0) {
-                    NSLog(@"add first and last name count is %lu , content is %@",(unsigned long)this.totalNameArray.count,this.totalNameArray);
-                    [this topScrollViewSetup:1];
-                    [this getTableViewData];
-                    [this buttonScrollViewSetup];
+                [this.totalTreeArray insertObject:lastTree atIndex:0];
+                [this.totalTreeArray insertObject:firstTree atIndex:this.totalTreeArray.count];
+                
+                if (this.totalTreeArray.count!=0) {
+                    NSLog(@"頭尾加入，循環 count is %lu",(unsigned long)this.totalTreeArray.count);
+                    [this getTableViewData:this.totalTreeArray]; //傳入dataTimeTreeObj物件的Array (循環)
+                    [this scrollViewSetup:1];
                 }
             }else{
                 //需判斷只有一個的話 ，先不用加循環 , 傳0給起始位置
-                [this topScrollViewSetup:0];
-                [this getTableViewData];
-                [this buttonScrollViewSetup];
+                [this getTableViewData:this.totalTreeArray]; //傳入dataTimeTreeObj物件的Array (循環)
+                [this scrollViewSetup:0];
             }
             
         });
@@ -126,81 +119,58 @@
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:nil message:error.description delegate:this cancelButtonTitle:@"確認" otherButtonTitles:nil];
         [av show];
     };
-    [dataClass findCatalogueNameViaUser];
+    [dataClass findTreeObjViaUser];
 }
 
--(void)topScrollViewSetup:(NSInteger)x{
-    
-    CGFloat topScrollWidth=self.topButtonScrollView.frame.size.width;
-    CGFloat topScrollHeight=self.topButtonScrollView.frame.size.height;
-    
-    self.topButtonScrollView.pagingEnabled = YES;
-    self.topButtonScrollView.showsHorizontalScrollIndicator = NO;
-    self.topButtonScrollView.showsVerticalScrollIndicator = NO;
-    
-    self.topButtonScrollView.contentSize=CGSizeMake(topScrollWidth*self.totalNameArray.count,topScrollHeight);
-    for (NSInteger i=0; i<self.totalNameArray.count; i++) {
-        UIButton *btn=[[UIButton alloc]initWithFrame:CGRectMake(topScrollWidth*i, 0, topScrollWidth, topScrollHeight)];
-        [btn setTitle:self.totalNameArray[i] forState:UIControlStateNormal];
-        [self.topButtonScrollView addSubview:btn];
-    }
-    //起始位置
-    [self.topButtonScrollView scrollRectToVisible:CGRectMake(topScrollWidth*x, 0, topScrollWidth,topScrollHeight) animated:NO];
-
-}
-
--(void)buttonScrollViewSetup{
+-(void)scrollViewSetup:(NSInteger)x{
     
     CGFloat scrollWidth=self.scrollView.frame.size.width;
     CGFloat scrollHeight=self.scrollView.frame.size.height;
     
+    self.scrollView.pagingEnabled = YES;
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.showsVerticalScrollIndicator = NO;
+    
     //ScrollView
     self.scrollView.contentSize = CGSizeMake(scrollWidth*self.vcArray.count, scrollHeight);
     
-    for (NSInteger i = 0; i<self.vcArray.count; i++) {
+    for (NSInteger i=0; i<self.vcArray.count; i++) {
         TimeTreeTableVC *vc = self.vcArray[i];
         vc.view.frame = CGRectMake(scrollWidth*i, 0, scrollWidth, self.scrollView.frame.size.height);
         [self.scrollView addSubview:vc.view];
     }
-    [self.scrollView scrollRectToVisible:CGRectMake(scrollWidth*1, 0, scrollWidth, self.scrollView.frame.size.height) animated:NO];
+    //起始位置
+    [self.scrollView scrollRectToVisible:CGRectMake(scrollWidth*x, 0, scrollWidth,scrollHeight) animated:NO];
+
 }
 
--(void)getTableViewData{
+
+-(void)getTableViewData:(NSArray*)totalTreeObjArray{
     // 產生ContainerView裡面的內容
     self.vcArray = [[NSMutableArray alloc] init];
-    
-    UIStoryboard *sb = self.storyboard;
-#warning to do nameArray count 跟 parse 裡的數量需一致 , 需要另外加id ?
-//    for (NSString *treeName in self.totalNameArray) {
-        TimeTreeTableVC *vc = [sb instantiateViewControllerWithIdentifier:@"TimeTreeVC"];
         
-        // get data from parse
-        PFQuery *pq=[PFQuery queryWithClassName:@"TimeTreeObj"];
-        NSArray *tempArray=[DataTimeTreeObj getTimeTreeObj];
-        for (NSInteger i; i<tempArray.count; i++) {
+    // get data from parse
+    for (NSInteger i=0; i<totalTreeObjArray.count; i++) {
+        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
+        TimeTreeTableVC *vc = [sb instantiateViewControllerWithIdentifier:@"TimeTreeVC"];
+        vc.dataObject=[NSArray arrayWithObjects:totalTreeObjArray[i], nil];
+        
+        //get tree name
+        DataTimeTreeObj *dataTimeTreeObj=totalTreeObjArray[i];
+        vc.treeTitle=dataTimeTreeObj.treeName;
+        
+        //get tree content
+        PFObject *contentObj=dataTimeTreeObj.treeContent;
+        [contentObj fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error){
             
-        [pq whereKey:timeTreeObj.objectId
-                equalTo:[tempArray[i]objectForKey:@"objectId"]];
+            NSString *content = [object objectForKey:@"content"];
+            NSLog(@"retrieved tree name is %@ , tree content is %@",dataTimeTreeObj.treeName , content);
+            vc.treeContent= content ; //關聯式pointer get data要再fetch一次
 
-        [pq whereKey:@"user" equalTo:self.user];
-        [pq getFirstObjectInBackgroundWithBlock:^(PFObject *obj , NSError *error){
-            if (!error) {
-//                vc.dataObject=obj;
-//                PFObject *pfObject=[obj lastObject];
-                NSString *pfStr=[obj objectForKey:@"treeContent"] ;
-                NSLog(@"obj----%@",obj);
-                NSLog(@"pfStr----%@",pfStr);
-
-            }
-            else{
-                NSLog(@"fetch tree content error %@",error);
-            }
-            
         }];
         
         [self addChildViewController:vc];
         [self.vcArray addObject:vc];
-        
     }
 
 }
@@ -210,44 +180,15 @@
     
     if (scrollView.tag == 100) {
         //上方ButtonScrollView
-        CGRect rect = self.topButtonScrollView.frame;
+        CGRect rect = self.scrollView.frame;
         
         //切換ButtonView 做循環
         if (scrollView.contentOffset.x == 0) {
-            [scrollView scrollRectToVisible:CGRectMake(rect.size.width*(self.totalNameArray.count-2), 0, rect.size.width, rect.size.height) animated:NO];
-        }else if(scrollView.contentOffset.x == rect.size.width*(self.totalNameArray.count-1)) {
+            [scrollView scrollRectToVisible:CGRectMake(rect.size.width*(self.totalTreeArray.count-2), 0, rect.size.width, rect.size.height) animated:NO];
+        }else if(scrollView.contentOffset.x == rect.size.width*(self.totalTreeArray.count-1)) {
             [scrollView scrollRectToVisible:CGRectMake(rect.size.width, 0, rect.size.width, rect.size.height) animated:NO];
         }
-//        
-//        //換標簽
-//        NSInteger index = scrollView.contentOffset.x/rect.size.width;
-//        NSLog(@"換到第幾個標簽 -- %zd", index);
-//        [self changeLable:index];
-//        
-//        //連動下方scrollView
-//        CGRect bottomRect = self.scrollView.frame;
-//        [self.scrollView scrollRectToVisible:CGRectMake(bottomRect.size.width*currentButtonIndex, 0, bottomRect.size.width, bottomRect.size.height) animated:NO];
-        
-    }else {
-//        //下方內容ScrollView
-//        
-//        //切換ScrollView 做循環
-//        CGRect rect = self.scrollView.frame;
-//        if (scrollView.contentOffset.x == 0) {
-//            [scrollView scrollRectToVisible:CGRectMake(rect.size.width*(vcArray.count-2), 0, rect.size.width, rect.size.height) animated:NO];
-//        }else if(scrollView.contentOffset.x == rect.size.width*(vcArray.count-1)) {
-//            [scrollView scrollRectToVisible:CGRectMake(rect.size.width, 0, rect.size.width, rect.size.height) animated:NO];
-//        }
-//        
-//        [self changeLable:scrollView.contentOffset.x/rect.size.width];
-//        
-//        //連動上方按鈕ScrollView
-//        CGRect topRect = self.topButtonScrollView.frame;
-//        [self.topButtonScrollView scrollRectToVisible:CGRectMake(topRect.size.width*currentButtonIndex, 0, topRect.size.width, topRect.size.height) animated:NO];
-//        
-        
     }
-    
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -276,10 +217,30 @@
 #warning  year pick view to do later
 }
 
--(void)addTreeOrEvent:(id)sender
+-(void)addTree:(id)sender
 {
-    UIActionSheet *actionSheet=[[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"cancel" destructiveButtonTitle:nil otherButtonTitles:@"add tree",@"add event", nil];
-    [actionSheet showInView:self.view];
+    //新增樹木
+    //1.先跳出新增樹木的名字
+    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
+    popVC *vc=[sb instantiateViewControllerWithIdentifier:@"popVC"];
+    
+    [self addChildViewController:vc];
+    
+    [vc.view setBackgroundColor:[UIColor whiteColor]];
+    vc.view.frame = CGRectMake(0, 0, 250, 150);
+    vc.view.center = self.view.center;
+    //        [vc.view.layer setBorderWidth:1];
+    //        [vc.view.layer setBorderColor:[UIColor blackColor].CGColor];
+    [vc.view.layer setCornerRadius:8];
+    
+    vc.timeTreeNameCallBack=^(NSString *timeTreeName){
+        self.timeTreeName=timeTreeName;
+        NSLog(@"get call back name is %@",timeTreeName);
+        [self addTimeTree];
+    };
+    
+    [self.view addSubview:vc.view];
+
 }
 
 -(void)addTimeTree{
@@ -307,47 +268,19 @@
     // Create the treeContent
     treeContent = [PFObject objectWithClassName:@"treeContent"];
     // Add a relation between the timeTreeObj and treeContent （樹名關聯->樹內容）
-    timeTreeObj[@"parent"] = treeContent;
-    
+    timeTreeObj[@"treeContent"] = treeContent;
     [timeTreeObj saveInBackground];
+    [self getTreeObjData];
+    
+    
+//    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Content" bundle:nil];
+//    ContentVC *vc=[sb instantiateViewControllerWithIdentifier:@"contentVC"];
+//    self.navigationController.navigationBarHidden=YES;
+//    [self.navigationController pushViewController:vc animated:YES];
  
 }
 
 
-
-
-#pragma mark - Action Sheet delegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex==0)
-    {
-        //新增樹木
-        //先跳出新增樹木的名字
-        UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
-        popVC *vc=[sb instantiateViewControllerWithIdentifier:@"popVC"];
-        
-        [self addChildViewController:vc];
-        
-        [vc.view setBackgroundColor:[UIColor whiteColor]];
-        vc.view.frame = CGRectMake(0, 0, 250, 150);
-        vc.view.center = self.view.center;
-//        [vc.view.layer setBorderWidth:1];
-//        [vc.view.layer setBorderColor:[UIColor blackColor].CGColor];
-        [vc.view.layer setCornerRadius:8];
-        
-        vc.timeTreeNameCallBack=^(NSString *timeTreeName){
-            self.timeTreeName=timeTreeName;
-            NSLog(@"get call back name is %@",timeTreeName);
-            [self addTimeTree];
-        };
-        
-        [self.view addSubview:vc.view];
-        
-    }else if(buttonIndex==1)
-    {
-        //新增事件
-    }
-}
 
 
 @end

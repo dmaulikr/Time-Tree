@@ -16,7 +16,6 @@
 {
     
 }
-
 @property (strong,nonatomic) NSArray *tempArray;
 
 @end
@@ -55,8 +54,9 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    NSLog(@"i have number of rows %lu",(unsigned long)self.dataObject.count);
+//    NSLog(@"i have number of rows %lu",(unsigned long)self.dataObject.count);
     return self.dataObject.count;
+//    return 0;
 }
 
 //- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -70,19 +70,30 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    
+
     CGSize viewSize=self.view.frame.size;
     UILabel *titleLable=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 30)];
-    titleLable.text=@"旅行";
+    titleLable.text=self.treeTitle;
     titleLable.textAlignment = NSTextAlignmentCenter;
-//    titleLable.backgroundColor=[UIColor blackColor];
     UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, 70, viewSize.width, 50)];
     [headerView addSubview:titleLable];
     [titleLable setCenter:headerView.center];
-    // header 隨著 scroll 滑動
+     //header 隨著 scroll 滑動
     self.tableView.tableHeaderView=headerView;
     
     return headerView;
+}
+
+-(UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+
+    CGFloat xAxis=self.view.frame.size.width/2;
+    UIView *footerView=[[UIView alloc]initWithFrame:CGRectMake(xAxis-15,0,30,30)];
+    UIButton *addButton=[[UIButton alloc]initWithFrame:footerView.frame];
+    [addButton setImage:[UIImage imageNamed:@"event_plus"] forState:UIControlStateNormal];
+    [footerView addSubview:addButton];
+    footerView.center=self.view.center;
+
+    return footerView;
 }
 
 
@@ -90,14 +101,16 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString *identify=@"Cell";
-
-    TimeTreeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identify forIndexPath:indexPath];
+    TimeTreeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identify];
     
     if (cell==nil) {
         cell=[[TimeTreeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
     }
     
 //    [self.tableView setContentInset:UIEdgeInsetsMake(60, 0, 0, 0)];
+//    self.tableView.tableHeaderView.backgroundColor=[UIColor darkGrayColor];
+//    self.tableView.tableFooterView.backgroundColor=[UIColor darkGrayColor];
+//    cell.backgroundColor=[UIColor darkGrayColor];
     
     if (indexPath.row%2) {
         // odd
@@ -105,9 +118,15 @@
         [cell.leftButton setHidden:NO];
         
     }else{
-        // even
-        [cell.rightButton setHidden:NO];
-        [cell.leftButton setHidden:YES];
+        // 無樹內容，顯示樹幹
+        if ([self.treeContent isEqualToString:@""]||self.treeContent==nil) {
+            [cell.rightButton setHidden:YES];
+            [cell.leftButton setHidden:YES];
+        }else{
+            // even
+            [cell.rightButton setHidden:NO];
+            [cell.leftButton setHidden:YES];
+        }
     }
     
 //    

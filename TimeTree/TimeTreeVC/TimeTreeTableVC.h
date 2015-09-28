@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Parse/Parse.h"
 
 @interface TimeTreeTableVC : UITableViewController <UIActionSheetDelegate>
-@property (strong,nonatomic) NSString *titleStr;
+//@property (strong,nonatomic) NSString *titleStr;
 @property (strong,nonatomic) NSArray *dataObject;
+@property (strong,nonatomic) NSString *treeTitle;
+@property (strong,nonatomic) NSString *treeContent;
 @end

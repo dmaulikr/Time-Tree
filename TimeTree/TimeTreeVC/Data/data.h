@@ -16,5 +16,11 @@ typedef void (^loadData) (NSArray *nameArray);
 typedef void (^loadDataFail) (NSError *error);
 @property (strong,nonatomic)loadDataFail loadDataFail;
 
--(void)findCatalogueNameViaUser;
+
+/**
+ 先抓Parse整包的array透過current user，再轉成DataTimeTreeObj物件存成Array
+ @param nil
+ @return nil
+*/
+-(void)findTreeObjViaUser;
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "popVC.h"
+#import "ContentVC.h"
 
 @interface popVC ()
 @property (weak, nonatomic) IBOutlet UITextField *treeNameTextField;
@@ -34,6 +35,8 @@
 //    NSLog(@"name is %@",self.treeNameTextField.text);
     [self.view removeFromSuperview];
     [self removeFromParentViewController];
+    
+    
 }
 
 - (IBAction)cancel:(id)sender {

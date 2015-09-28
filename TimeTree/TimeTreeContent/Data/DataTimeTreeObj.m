@@ -19,7 +19,7 @@
             self.objectId=obj.objectId;
         }
         if ([obj objectForKey:@"treeContent"]!=nil) {
-            self.treeContent=[obj objectForKey:@"treeContent"];
+            self.treeContent=[obj objectForKey:@"treeContent"]; // self.treeContent become "treeContent" PFObject , 因為TimeTreeObj關聯到treeContent
         }
         if ([obj objectForKey:@"tree_name"]!=nil) {
             self.treeName=[obj objectForKey:@"tree_name"];
@@ -34,7 +34,7 @@
     return self;
 }
 
-
+/*
 +(void)saveTimeTreeObj:(id)obj{
     
     // 取出之前的資料
@@ -59,5 +59,5 @@
     return iDArray;
 }
 
-
+*/
 @end
