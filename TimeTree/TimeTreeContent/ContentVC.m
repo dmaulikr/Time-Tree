@@ -7,7 +7,6 @@
 //
 
 #import "ContentVC.h"
-#import "EventVC.h"
 #import "ContentTableViewCell.h"
 #import "Utility.h"
 #import "ParallaxHeaderView.h"
@@ -33,7 +32,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 #warning thinking 需要加tag only for 第一次進來
-    [self parseClassCreate];
+    if (!self.forAddContentTag) {
+        [self parseClassCreate];
+    }
     
     // Create ParallaxHeaderView with specified size, and set it as uitableView Header, that's it
     [self CreateParallaxHeaderView];
@@ -48,9 +49,6 @@
     // tap gesture
     UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
     [self.view addGestureRecognizer:tapGesture];
-#warning thinking 好像直接寫就好不用跳個view出來
-//    [self eventAlertView];
-    
     
 }
 -(void)viewDidAppear:(BOOL)animated{
@@ -83,13 +81,15 @@
     timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
     // timeTreeObj 關聯到 user
     timeTreeObj[@"user"]=user;
+    
     // 加入使用者從目錄選的第一個名字進來的name
     [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
-    
+
     // Create the treeContent class
     treeContent = [PFObject objectWithClassName:@"treeContent"];
-    // Add a relation between the timeTreeObj and treeContent （timeTreeObj obj關聯->樹內容）
-    timeTreeObj[@"treeContent"] = treeContent;
+    // Add a relation between the timeTreeObj and treeContent （treeContent obj關聯->timeTreeObj 樹名）
+//    timeTreeObj[@"treeContent"] = treeContent;
+    treeContent[@"content_Obj"]=timeTreeObj;
     [timeTreeObj saveInBackground];
     
     /*
@@ -114,21 +114,7 @@
      */
 }
 
-#pragma mark - action
-//-(void)eventAlertView{
-//
-//    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Content" bundle:nil];
-//    EventVC *vc=[sb instantiateViewControllerWithIdentifier:@"eventVC"];
-//    [self addChildViewController:vc];
-//    [vc.view setBackgroundColor:[UIColor whiteColor]];
-//    vc.evenLabel.text=self.cataStr;
-//    vc.view.center = self.view.center;
-//    [vc.view.layer setBorderWidth:1];
-//    [vc.view.layer setBorderColor:[UIColor grayColor].CGColor];
-//    [vc.view.layer setCornerRadius:8];
-//    [self.view addSubview:vc.view];    
-//}
-
+#pragma mark - button action
 -(void)tap:(id)sender{
     [self.view endEditing:YES];
 }
@@ -139,23 +125,47 @@
 }
 
 - (IBAction)saveGo2NextView:(id)sender {
+    
     // get textField and save to parse
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:
                              [NSIndexPath indexPathForRow:0 inSection:0]];
     UITextField *textField = (UITextField *)[cell.contentView viewWithTag:100];
     NSLog(@"text is %@",textField.text);
     
-    // save to parse
-    treeContent[@"content"]=textField.text;
-#warning thinking save to PFFile ? text ?
-    [treeContent saveInBackground];
 
-#warning thinking 第一次for push 之後應該dismiss就好？
-    // push to container
-    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
-    ContainerVC *vc=[sb instantiateViewControllerWithIdentifier:@"containerVC"];
-    self.navigationController.navigationBarHidden=NO;
-    [self.navigationController pushViewController:vc animated:YES];
+    //第一次 for push，之後dismiss
+    if (self.forAddContentTag) {
+        PFQuery *pq=[PFQuery queryWithClassName:@"treeContent"];
+        [pq getObjectInBackgroundWithId:self.ttObj.objectId  block:^(PFObject *obj,NSError *err){
+#warning thinking 應該不是用objID去找,若有多個事件,原本的就會被蓋過去
+            [obj setObject:textField.text forKey:@"content"];
+            // save to parse
+#warning thinking save to PFFile ? text ?
+#warning to do relod tableView data
+            [obj saveInBackground];
+            
+        }];
+        
+        self.forAddContentTag=NO;
+        [self dismissViewControllerAnimated:YES completion:nil];
+        
+    }else{
+        
+        // save to parse
+        treeContent[@"content"]=textField.text;
+#warning thinking save to PFFile ? text ?
+        [treeContent saveInBackground];
+ 
+        // push to container
+        UIStoryboard *sb=[UIStoryboard storyboardWithName:@"TimeTree" bundle:nil];
+        ContainerVC *vc=[sb instantiateViewControllerWithIdentifier:@"containerVC"];
+        self.navigationController.navigationBarHidden=NO;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+#warning thinking -user singloton ?
+        // for same PFObject
+        vc.timeTreeObj=timeTreeObj;
+    }
 }
 
 

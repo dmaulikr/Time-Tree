@@ -20,7 +20,7 @@
 
 @interface ContainerVC ()
 {
-    PFObject *timeTreeObj;
+//    PFObject *timeTreeObj;
     PFObject *treeContent;
     data *dataClass;
 }
@@ -62,6 +62,7 @@
     
     // PFUser
     self.user=[PFUser currentUser];
+    
     
     // get tree obj data , TscrollView 頭尾加入 供無限循環
     [self getTreeObjData];
@@ -159,15 +160,29 @@
         DataTimeTreeObj *dataTimeTreeObj=totalTreeObjArray[i];
         vc.treeTitle=dataTimeTreeObj.treeName;
         
-        //get tree content
-        PFObject *contentObj=dataTimeTreeObj.treeContent;
-        [contentObj fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error){
-            
-            NSString *content = [object objectForKey:@"content"];
-            NSLog(@"retrieved tree name is %@ , tree content is %@",dataTimeTreeObj.treeName , content);
-            vc.treeContent= content ; //關聯式pointer get data要再fetch一次
-
+        PFQuery *pq=[PFQuery queryWithClassName:@"treeContent"];
+        [pq findObjectsInBackgroundWithBlock:^(NSArray *objArray,NSError *err){
+                
+                
+                
+                
         }];
+            
+        
+        
+        
+#warning  to do ，這邊要抓全部內容，不是單一PFObject check
+        //get tree content
+//        PFObject *contentObj=dataTimeTreeObj.treeContent;
+//        [contentObj fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error){
+//            
+//            NSLog(@"PFObject id is %@",object.objectId);
+//            NSString *content = [object objectForKey:@"content"];
+//            NSLog(@"retrieved tree name is %@ , tree content is %@",dataTimeTreeObj.treeName , content);
+//            vc.treeContent= content ; //關聯式pointer get data要再fetch一次
+//            [vc.tableView reloadData];
+//
+//        }];
         
         [self addChildViewController:vc];
         [self.vcArray addObject:vc];
@@ -261,23 +276,17 @@
 //    }];
     
     // 新增樹名
-    timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
-    timeTreeObj[@"user"]=self.user;
-    [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
+    self.timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
+    self.timeTreeObj[@"user"]=self.user;
+    [self.timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
     
     // Create the treeContent
     treeContent = [PFObject objectWithClassName:@"treeContent"];
     // Add a relation between the timeTreeObj and treeContent （樹名關聯->樹內容）
-    timeTreeObj[@"treeContent"] = treeContent;
-    [timeTreeObj saveInBackground];
+    self.timeTreeObj[@"treeContent"] = treeContent;
+    //同步存檔
+    [self.timeTreeObj save];
     [self getTreeObjData];
-    
-    
-//    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Content" bundle:nil];
-//    ContentVC *vc=[sb instantiateViewControllerWithIdentifier:@"contentVC"];
-//    self.navigationController.navigationBarHidden=YES;
-//    [self.navigationController pushViewController:vc animated:YES];
- 
 }
 
 

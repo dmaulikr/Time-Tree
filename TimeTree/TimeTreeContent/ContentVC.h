@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Parse/Parse.h"
 
 @interface ContentVC : UIViewController <UITableViewDataSource,UITableViewDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate>
-@property (strong,nonatomic)NSString *timeTreeName;
+@property (strong,nonatomic)NSString *timeTreeName; //由CatalogueTableVC傳過來
 
+@property (assign,nonatomic)BOOL forAddContentTag; //由timeTreeTableVC傳過來
+@property (strong,nonatomic)PFObject *ttObj; // 由timeTreeTableVC傳過來
 @end

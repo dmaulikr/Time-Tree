@@ -15,7 +15,7 @@
 @property (strong,nonatomic) NSString *objectId;
 @property (strong,nonatomic) NSString *treeName;
 @property (strong,nonatomic) NSString *userIs; //關聯到user's objectId
-@property (strong,nonatomic) PFObject *treeContent; //關聯到treeContent's objectId
+//@property (strong,nonatomic) PFObject *treeContent; //關聯到treeContent's objectId
 @property (strong,nonatomic) NSDate *createdAt;
 
 /**

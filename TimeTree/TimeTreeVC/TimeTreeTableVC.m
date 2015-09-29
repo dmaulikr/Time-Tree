@@ -9,12 +9,13 @@
 #import "TimeTreeTableVC.h"
 #import "TimeTreeTableViewCell.h"
 #import "NavigationVC.h"
-
+#import "ContentVC.h"
+#import "DataTimeTreeObj.h"
 
 
 @interface TimeTreeTableVC () 
 {
-    
+    UIView *footerView;
 }
 @property (strong,nonatomic) NSArray *tempArray;
 
@@ -45,24 +46,37 @@
 }
 
 
+#pragma mark - button action
+-(void)addEvent:(UIButton*)sender{
+    
+    UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Content" bundle:nil];
+    ContentVC *vc=[sb instantiateViewControllerWithIdentifier:@"contentVC"];
+    vc.forAddContentTag=YES;
+    
+//    DataTimeTreeObj *dataObj=self.dataObject[0];
+//    PFObject *treeContentObj=dataObj.treeContent;
+//    [treeContentObj fetchIfNeededInBackgroundWithBlock:^(PFObject *obj ,NSError *err){
+//        vc.ttObj=obj;
+//        NSLog(@"add event objId is %@",obj.objectId);
+//        [self.navigationController presentViewController:vc animated:YES completion:nil];
+//    }];
+    
+    
+}
+
+
 #pragma mark - Table view data source
 
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//    // Return the number of sections.
-//    return 1;
-//}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
 //    NSLog(@"i have number of rows %lu",(unsigned long)self.dataObject.count);
     return self.dataObject.count;
 //    return 0;
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-//{
-//    return 150;
-//}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 60.0f;
+}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -86,13 +100,18 @@
 
 -(UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
 
-    CGFloat xAxis=self.view.frame.size.width/2;
-    UIView *footerView=[[UIView alloc]initWithFrame:CGRectMake(xAxis-15,0,30,30)];
-    UIButton *addButton=[[UIButton alloc]initWithFrame:footerView.frame];
-    [addButton setImage:[UIImage imageNamed:@"event_plus"] forState:UIControlStateNormal];
-    [footerView addSubview:addButton];
-    footerView.center=self.view.center;
-
+    if (footerView==nil) {
+    
+        CGFloat xAxis=self.view.frame.size.width/2;
+        footerView=[[UIView alloc]initWithFrame:CGRectMake(xAxis-15,0,30,30)];
+        UIButton *addButton=[[UIButton alloc]initWithFrame:footerView.frame];
+        [addButton setImage:[UIImage imageNamed:@"event_plus"] forState:UIControlStateNormal];
+        [addButton addTarget:self action:@selector(addEvent:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [footerView addSubview:addButton];
+        
+    }
+    
     return footerView;
 }
 
@@ -128,22 +147,6 @@
             [cell.leftButton setHidden:YES];
         }
     }
-    
-//    
-//    for (NSInteger i=0; i<self.tempArray.count; i++) {
-//        if (i%2) {
-//            //odd
-//            [cell.rightButton setHidden:YES];
-//            [cell.leftButton setHidden:NO];
-//            NSLog(@"odd");
-//        }else{
-//            //even
-//            [cell.rightButton setHidden:NO];
-//            [cell.leftButton setHidden:YES];
-//            NSLog(@"even");
-//        }
-//    }
-    
     
     return cell;
 }

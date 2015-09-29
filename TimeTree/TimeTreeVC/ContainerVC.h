@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Parse/Parse.h"
 
 @interface ContainerVC : UIViewController
 @property (strong,nonatomic)NSString *timeTreeName;
+
+@property (strong,nonatomic) PFObject *timeTreeObj;
+
 
 @end
