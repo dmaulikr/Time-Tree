@@ -7,6 +7,9 @@
 //
 
 #import "Utility.h"
+#import "DataTreeContentObj.h"
+#import "Parse/Parse.h"
+
 
 @implementation Utility
 
@@ -16,5 +19,22 @@
     NSString *dateStr=[formatter stringFromDate:date];
     return dateStr;
 }
+
++(NSArray*)arrayWithoutDuplicates:(NSArray*)rawArray{
+    
+    NSMutableArray *pfArray=[[NSMutableArray alloc]init];
+    
+    
+    for (PFObject *contentObj in rawArray) {
+        DataTreeContentObj *contentData=[[DataTreeContentObj alloc]initWithContentObj:contentObj];
+        PFObject *obj=contentData.relateContent_obj;
+        [pfArray addObject:obj];
+    }
+    
+    NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:pfArray];
+    NSArray *arrayWithoutDuplicates = [orderedSet array];
+    return arrayWithoutDuplicates;
+}
+
 
 @end
