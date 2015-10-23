@@ -22,8 +22,8 @@
             self.content=[obj objectForKey:@"content"];
         }
         
-        if ([obj objectForKey:@"content_obj"]!=nil) {
-            self.content_obj=[obj objectForKey:@"content_obj"];
+        if ([obj objectForKey:@"content_Obj"]!=nil) {
+            self.relateContent_obj=[obj objectForKey:@"content_Obj"];
         }
         
         if (obj.createdAt!=nil) {

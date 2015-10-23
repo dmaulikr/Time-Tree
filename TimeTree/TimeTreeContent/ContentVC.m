@@ -13,6 +13,7 @@
 #import "Parse/Parse.h"
 #import "ContainerVC.h"
 #import "DataTimeTreeObj.h"
+#import "ContainerVC.h"
 
 @interface ContentVC ()
 {
@@ -135,19 +136,17 @@
 
     //第一次 for push，之後dismiss
     if (self.forAddContentTag) {
-        PFQuery *pq=[PFQuery queryWithClassName:@"treeContent"];
-        [pq getObjectInBackgroundWithId:self.ttObj.objectId  block:^(PFObject *obj,NSError *err){
-#warning thinking 應該不是用objID去找,若有多個事件,原本的就會被蓋過去
-            [obj setObject:textField.text forKey:@"content"];
-            // save to parse
-#warning thinking save to PFFile ? text ?
-#warning to do relod tableView data
-            [obj saveInBackground];
-            
-        }];
         
+        PFObject *addContent=[PFObject objectWithClassName:@"treeContent"];
+        [addContent setObject:textField.text forKey:@"content"];
+        [addContent setObject:self.ttObj forKey:@"content_Obj"];
+        [addContent saveInBackground];
+#warning thinking save to PFFile ? text ?
+    
         self.forAddContentTag=NO;
         [self dismissViewControllerAnimated:YES completion:nil];
+        
+        [[ContainerVC currentInstance]viewDidLoad];
         
     }else{
         

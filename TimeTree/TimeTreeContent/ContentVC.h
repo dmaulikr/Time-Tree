@@ -13,5 +13,5 @@
 @property (strong,nonatomic)NSString *timeTreeName; //由CatalogueTableVC傳過來
 
 @property (assign,nonatomic)BOOL forAddContentTag; //由timeTreeTableVC傳過來
-@property (strong,nonatomic)PFObject *ttObj; // 由timeTreeTableVC傳過來
+@property (strong,nonatomic)PFObject *ttObj; // 由timeTreeTableVC傳過來  讓內容知道是增加哪一棵樹
 @end

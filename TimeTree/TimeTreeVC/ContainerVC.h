@@ -14,5 +14,8 @@
 
 @property (strong,nonatomic) PFObject *timeTreeObj;
 
+-(void)viewDidLoad;
+
++(ContainerVC*)currentInstance;
 
 @end

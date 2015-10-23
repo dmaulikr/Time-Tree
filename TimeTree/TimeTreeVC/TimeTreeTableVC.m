@@ -11,13 +11,15 @@
 #import "NavigationVC.h"
 #import "ContentVC.h"
 #import "DataTimeTreeObj.h"
+#import "DataTreeContentObj.h"
 
 
-@interface TimeTreeTableVC () 
+@interface TimeTreeTableVC ()
 {
     UIView *footerView;
 }
-@property (strong,nonatomic) NSArray *tempArray;
+
+@property (strong,nonatomic)NSMutableArray *tempArray;
 
 @end
 
@@ -25,14 +27,31 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // cell 直接建在tableViewController 不用寫以下註冊code
+    //    [self.tableView registerNib:[UINib nibWithNibName:@"TimeTreeTableViewCell" bundle:nil] forCellReuseIdentifier:@"Cell"];
+    
+//    self.dataObjectArray=[[NSMutableArray alloc]init];
+    
+    self.tempArray=[[NSMutableArray alloc]init];
+    for (PFObject *contentObj in self.dataObjectArray) {
+        DataTreeContentObj *contentData=[[DataTreeContentObj alloc]initWithContentObj:contentObj];
+        [self.tempArray addObject:contentData];
+    }
+    
+    self.dataObjectArray=[[NSMutableArray alloc]initWithArray:self.tempArray];
+    
+    [self fetchPFObjectContentData];
+}
 
+-(void)viewDidAppear:(BOOL)animated{
+
+   
+}
+
+-(void)viewWillAppear:(BOOL)animated{
     
-// cell 直接建在tableViewController 不用寫以下註冊code
-//    [self.tableView registerNib:[UINib nibWithNibName:@"TimeTreeTableViewCell" bundle:nil] forCellReuseIdentifier:@"Cell"];
-    
-    self.tempArray=@[@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1"];
-    
-    
+  
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,11 +59,30 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)viewDidAppear:(BOOL)animated{
-//    self.title=self.titleStr;
-//    self.title=@"2015";
-}
 
+// fetch timeTree obj via relatedContent_obj in treeContent
+-(void)fetchPFObjectContentData{
+    
+    for (DataTreeContentObj *data in self.dataObjectArray) {
+        
+        PFObject *treeContentObj=data.relateContent_obj;
+        
+        //get tree name
+        [treeContentObj fetchIfNeededInBackgroundWithBlock:^(PFObject *obj ,NSError *err){
+            if (err) {
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:nil message:@"Fetch data fail,Please try again later!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                NSLog(@"get TimeTreeObj fail via PFObject fetch , error is %@",err.description);
+                [av show];
+            }
+            else{
+                if (obj!=nil) {
+                    self.treeTitle=[obj objectForKey:@"tree_name"];
+                    [self.tableView reloadData];
+                }
+            }
+        }];
+    }
+}
 
 #pragma mark - button action
 -(void)addEvent:(UIButton*)sender{
@@ -52,14 +90,17 @@
     UIStoryboard *sb=[UIStoryboard storyboardWithName:@"Content" bundle:nil];
     ContentVC *vc=[sb instantiateViewControllerWithIdentifier:@"contentVC"];
     vc.forAddContentTag=YES;
+    DataTreeContentObj *contentObj=self.dataObjectArray[0];
+    vc.ttObj=contentObj.relateContent_obj; //傳content_Obj給ContentVC,讓內容知道是增加哪一棵樹
+    [self.navigationController presentViewController:vc animated:YES completion:nil];
     
-//    DataTimeTreeObj *dataObj=self.dataObject[0];
-//    PFObject *treeContentObj=dataObj.treeContent;
-//    [treeContentObj fetchIfNeededInBackgroundWithBlock:^(PFObject *obj ,NSError *err){
-//        vc.ttObj=obj;
-//        NSLog(@"add event objId is %@",obj.objectId);
-//        [self.navigationController presentViewController:vc animated:YES completion:nil];
-//    }];
+    //    DataTimeTreeObj *dataObj=self.dataObject[0];
+    //    PFObject *treeContentObj=dataObj.treeContent;
+    //    [treeContentObj fetchIfNeededInBackgroundWithBlock:^(PFObject *obj ,NSError *err){
+    //        vc.ttObj=obj;
+    //        NSLog(@"add event objId is %@",obj.objectId);
+    //        [self.navigationController presentViewController:vc animated:YES completion:nil];
+    //    }];
     
     
 }
@@ -68,9 +109,7 @@
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//    NSLog(@"i have number of rows %lu",(unsigned long)self.dataObject.count);
-    return self.dataObject.count;
-//    return 0;
+    return self.dataObjectArray.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -84,7 +123,7 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-
+    
     CGSize viewSize=self.view.frame.size;
     UILabel *titleLable=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 30)];
     titleLable.text=self.treeTitle;
@@ -92,16 +131,16 @@
     UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, 70, viewSize.width, 50)];
     [headerView addSubview:titleLable];
     [titleLable setCenter:headerView.center];
-     //header 隨著 scroll 滑動
+    //header 隨著 scroll 滑動
     self.tableView.tableHeaderView=headerView;
     
     return headerView;
 }
 
 -(UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-
-    if (footerView==nil) {
     
+    if (footerView==nil) {
+        
         CGFloat xAxis=self.view.frame.size.width/2;
         footerView=[[UIView alloc]initWithFrame:CGRectMake(xAxis-15,0,30,30)];
         UIButton *addButton=[[UIButton alloc]initWithFrame:footerView.frame];
@@ -126,25 +165,35 @@
         cell=[[TimeTreeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
     }
     
-//    [self.tableView setContentInset:UIEdgeInsetsMake(60, 0, 0, 0)];
-//    self.tableView.tableHeaderView.backgroundColor=[UIColor darkGrayColor];
-//    self.tableView.tableFooterView.backgroundColor=[UIColor darkGrayColor];
-//    cell.backgroundColor=[UIColor darkGrayColor];
+    //    [self.tableView setContentInset:UIEdgeInsetsMake(60, 0, 0, 0)];
+    //    self.tableView.tableHeaderView.backgroundColor=[UIColor darkGrayColor];
+    //    self.tableView.tableFooterView.backgroundColor=[UIColor darkGrayColor];
+    //    cell.backgroundColor=[UIColor darkGrayColor];
+    
+    DataTreeContentObj *dataObj=self.dataObjectArray[indexPath.row];
     
     if (indexPath.row%2) {
         // odd
         [cell.rightButton setHidden:YES];
+        [cell.rightLabel setHidden:NO];
+        cell.rightLabel.text=dataObj.content;
+        
         [cell.leftButton setHidden:NO];
+        [cell.leftLabel setHidden:YES];
         
     }else{
         // 無樹內容，顯示樹幹
-        if ([self.treeContent isEqualToString:@""]||self.treeContent==nil) {
+        if ([dataObj.content isEqualToString:@""]||dataObj.content==nil) {
             [cell.rightButton setHidden:YES];
             [cell.leftButton setHidden:YES];
         }else{
-            // even
+            // 有內容顯示樹枝 , even
             [cell.rightButton setHidden:NO];
+            [cell.rightLabel setHidden:YES];
+            
             [cell.leftButton setHidden:YES];
+            [cell.leftLabel setHidden:NO];
+            cell.leftLabel.text=dataObj.content;
         }
     }
     

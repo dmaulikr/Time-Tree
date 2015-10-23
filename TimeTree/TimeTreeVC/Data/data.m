@@ -9,6 +9,7 @@
 #import "data.h"
 #import "Parse/Parse.h"
 #import "DataTimeTreeObj.h"
+#import "Utility.h"
 
 @implementation data
 
@@ -23,6 +24,7 @@
     // query only condition is current user 跟使用者有關的都抓下來成 array
     PFQuery *pq=[PFQuery queryWithClassName:@"TimeTreeObj"];
     [pq whereKey:@"user" equalTo:user];
+    [pq orderByAscending:@"createdAt"];
     [pq findObjectsInBackgroundWithBlock:^(NSArray *objectArray , NSError *error){
         if (!error) {
             
@@ -31,8 +33,9 @@
                 for (PFObject *pfObj in objectArray) {
                     DataTimeTreeObj *treeObj=[[DataTimeTreeObj alloc]initObj:pfObj];
                     [treeObjArray addObject:treeObj];
-                    NSLog(@"user: %@ , own tree count is %lu , tree name are %@",username,(unsigned long)objectArray.count,treeObj.treeName);
+//                    NSLog(@"tree id are %@",treeObj.objectId);
                 }
+                NSLog(@"user: %@ , own tree count is %lu ",username,(unsigned long)treeObjArray.count);
                 self.dataBlock(treeObjArray);
             }
            
@@ -40,7 +43,6 @@
             if (self.loadDataFail) {
                 self.loadDataFail(error);
             }
-            NSLog(@"get total name error is %@",error);
         }
         
     }];

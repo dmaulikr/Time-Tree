@@ -19,7 +19,7 @@
 @property (strong,nonatomic) NSDate *createdAt;
 
 /**
- 初始化 Parse clase裡的 TimeTreeObj:key,value
+ 初始化 Parse class裡的物件 TimeTreeObj:key,value
  @param obj:PFObject
  @return nil
 */
