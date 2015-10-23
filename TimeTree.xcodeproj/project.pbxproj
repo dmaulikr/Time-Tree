@@ -52,6 +52,7 @@
 		2961A2191B5105E400DB1A97 /* TimeTree.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2961A2181B5105E400DB1A97 /* TimeTree.storyboard */; };
 		2961A21C1B57DFB300DB1A97 /* TimeTreeTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2961A21B1B57DFB300DB1A97 /* TimeTreeTableVC.m */; };
 		2961A21F1B57E12000DB1A97 /* TimeTreeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2961A21E1B57E12000DB1A97 /* TimeTreeTableViewCell.m */; };
+		297F56911BBA5E5900950275 /* DataTreeContentObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 297F56901BBA5E5900950275 /* DataTreeContentObj.m */; settings = {ASSET_TAGS = (); }; };
 		2986EA671B3449EF0081AC33 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2986EA661B3449EF0081AC33 /* FBSDKCoreKit.framework */; };
 		29EB565A1B500310005FE66B /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 29EB56591B500310005FE66B /* AsyncImageView.m */; };
 		29EB565F1B5004D2005FE66B /* URLib.m in Sources */ = {isa = PBXBuildFile; fileRef = 29EB565E1B5004D2005FE66B /* URLib.m */; };
@@ -62,7 +63,6 @@
 		7C75A5E11B85B56900831C64 /* popVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C75A5E01B85B56900831C64 /* popVC.m */; };
 		7CBEC1F71B969296004A7E9F /* ContentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBEC1F61B969296004A7E9F /* ContentVC.m */; };
 		7CBEC1F91B9692AB004A7E9F /* Content.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CBEC1F81B9692AB004A7E9F /* Content.storyboard */; };
-		7CBEC1FC1B969715004A7E9F /* EventVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBEC1FB1B969715004A7E9F /* EventVC.m */; };
 		7CBEC2001B96C7DA004A7E9F /* ContentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBEC1FF1B96C7DA004A7E9F /* ContentTableViewCell.m */; };
 		7CBEC2031B96CA3C004A7E9F /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBEC2021B96CA3C004A7E9F /* Utility.m */; };
 		7CBEC2071B96CD83004A7E9F /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBEC2061B96CD83004A7E9F /* UIImage+ImageEffects.m */; };
@@ -161,6 +161,8 @@
 		2961A21B1B57DFB300DB1A97 /* TimeTreeTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeTreeTableVC.m; sourceTree = "<group>"; };
 		2961A21D1B57E12000DB1A97 /* TimeTreeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeTreeTableViewCell.h; path = ../TimeTreeTableViewCell.h; sourceTree = "<group>"; };
 		2961A21E1B57E12000DB1A97 /* TimeTreeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimeTreeTableViewCell.m; path = ../TimeTreeTableViewCell.m; sourceTree = "<group>"; };
+		297F568F1BBA5E5900950275 /* DataTreeContentObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataTreeContentObj.h; sourceTree = "<group>"; };
+		297F56901BBA5E5900950275 /* DataTreeContentObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataTreeContentObj.m; sourceTree = "<group>"; };
 		2986EA661B3449EF0081AC33 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		29EB56581B500310005FE66B /* AsyncImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncImageView.h; sourceTree = "<group>"; };
 		29EB56591B500310005FE66B /* AsyncImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncImageView.m; sourceTree = "<group>"; };
@@ -179,8 +181,6 @@
 		7CBEC1F51B969296004A7E9F /* ContentVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentVC.h; sourceTree = "<group>"; };
 		7CBEC1F61B969296004A7E9F /* ContentVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentVC.m; sourceTree = "<group>"; };
 		7CBEC1F81B9692AB004A7E9F /* Content.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Content.storyboard; sourceTree = "<group>"; };
-		7CBEC1FA1B969715004A7E9F /* EventVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventVC.h; sourceTree = "<group>"; };
-		7CBEC1FB1B969715004A7E9F /* EventVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventVC.m; sourceTree = "<group>"; };
 		7CBEC1FE1B96C7DA004A7E9F /* ContentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentTableViewCell.h; sourceTree = "<group>"; };
 		7CBEC1FF1B96C7DA004A7E9F /* ContentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentTableViewCell.m; sourceTree = "<group>"; };
 		7CBEC2011B96CA3C004A7E9F /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
@@ -490,8 +490,6 @@
 				7CBEC1F51B969296004A7E9F /* ContentVC.h */,
 				7CBEC1F61B969296004A7E9F /* ContentVC.m */,
 				7CBEC1F81B9692AB004A7E9F /* Content.storyboard */,
-				7CBEC1FA1B969715004A7E9F /* EventVC.h */,
-				7CBEC1FB1B969715004A7E9F /* EventVC.m */,
 			);
 			path = TimeTreeContent;
 			sourceTree = "<group>";
@@ -532,6 +530,8 @@
 			children = (
 				7CBEC21B1B994831004A7E9F /* data.h */,
 				7CBEC21C1B994831004A7E9F /* data.m */,
+				297F568F1BBA5E5900950275 /* DataTreeContentObj.h */,
+				297F56901BBA5E5900950275 /* DataTreeContentObj.m */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -650,7 +650,6 @@
 				29107A3A1B271FB6007AB752 /* main.m in Sources */,
 				2944F88A1B5BCB460074F94B /* REFrostedViewController.m in Sources */,
 				29107A431B271FB6007AB752 /* ViewController.m in Sources */,
-				7CBEC1FC1B969715004A7E9F /* EventVC.m in Sources */,
 				7CBEC20C1B96CD94004A7E9F /* StoryCommentCell.m in Sources */,
 				295F2EEB1B50F830008A9767 /* CatalogueTableVC.m in Sources */,
 				2924CF1D1B340DEC009E2B17 /* Comms.m in Sources */,
@@ -658,6 +657,7 @@
 				7CBEC2191B985372004A7E9F /* MBProgressHUD.m in Sources */,
 				29ED36701B9C1436009D3B78 /* DataTimeTreeObj.m in Sources */,
 				7CBEC2071B96CD83004A7E9F /* UIImage+ImageEffects.m in Sources */,
+				297F56911BBA5E5900950275 /* DataTreeContentObj.m in Sources */,
 				2944F8881B5BCB460074F94B /* RECommonFunctions.m in Sources */,
 				29EB56621B50BFCB005FE66B /* RegisterViewController.m in Sources */,
 				7C75A5E11B85B56900831C64 /* popVC.m in Sources */,
