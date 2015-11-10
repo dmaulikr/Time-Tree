@@ -32,6 +32,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // PFUser
+    user=[PFUser currentUser];
+    
 #warning thinking 需要加tag only for 第一次進來
     if (!self.forAddContentTag) {
         [self parseClassCreate];
@@ -75,8 +79,6 @@
 }
 
 -(void)parseClassCreate{
-    // PFUser
-    user=[PFUser currentUser];
     
     // create PFObject class
     timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
@@ -91,28 +93,9 @@
     // Add a relation between the timeTreeObj and treeContent （treeContent obj關聯->timeTreeObj 樹名）
 //    timeTreeObj[@"treeContent"] = treeContent;
     treeContent[@"content_Obj"]=timeTreeObj;
+    treeContent[@"user"]=user;
     [timeTreeObj saveInBackground];
     
-    /*
-    [timeTreeObj saveInBackgroundWithBlock:^(BOOL finishSave,NSError *error){
-        
-        if (finishSave) {
-//            NSString *timeTreeObjId=timeTreeObj.objectId;
-// save to array in other class
-
-#warning to do , 增加樹的那邊也需save id
-            //存整包物件
-            DataTimeTreeObj *dataObj=[[DataTimeTreeObj alloc]initObj:timeTreeObj];
-            [DataTimeTreeObj saveTimeTreeObj:dataObj];
-        }
-        
-        
-        if (error) {
-            UIAlertView *av=[[UIAlertView alloc]initWithTitle:nil message:error.description delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [av show];
-        }
-    }];
-     */
 }
 
 #pragma mark - button action
@@ -134,12 +117,13 @@
     NSLog(@"text is %@",textField.text);
     
 
-    //第一次 for push，之後dismiss
+    // 增加內容會到這邊
     if (self.forAddContentTag) {
         
-        PFObject *addContent=[PFObject objectWithClassName:@"treeContent"];
+        PFObject *addContent=[PFObject objectWithClassName:@"treeContent"]; // 新增加一行
         [addContent setObject:textField.text forKey:@"content"];
         [addContent setObject:self.ttObj forKey:@"content_Obj"];
+        [addContent setObject:user forKey:@"user"];
         [addContent saveInBackground];
 #warning thinking save to PFFile ? text ?
     
@@ -149,7 +133,7 @@
         [[ContainerVC currentInstance]viewDidLoad];
         
     }else{
-        
+        // 第一次會到這
         // save to parse
         treeContent[@"content"]=textField.text;
 #warning thinking save to PFFile ? text ?
