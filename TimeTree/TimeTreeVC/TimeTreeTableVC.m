@@ -93,16 +93,7 @@
     DataTreeContentObj *contentObj=self.dataObjectArray[0];
     vc.ttObj=contentObj.relateContent_obj; //傳content_Obj給ContentVC,讓內容知道是增加哪一棵樹
     [self.navigationController presentViewController:vc animated:YES completion:nil];
-    
-    //    DataTimeTreeObj *dataObj=self.dataObject[0];
-    //    PFObject *treeContentObj=dataObj.treeContent;
-    //    [treeContentObj fetchIfNeededInBackgroundWithBlock:^(PFObject *obj ,NSError *err){
-    //        vc.ttObj=obj;
-    //        NSLog(@"add event objId is %@",obj.objectId);
-    //        [self.navigationController presentViewController:vc animated:YES completion:nil];
-    //    }];
-    
-    
+        
 }
 
 
@@ -148,6 +139,7 @@
         [addButton addTarget:self action:@selector(addEvent:) forControlEvents:UIControlEventTouchUpInside];
         
         [footerView addSubview:addButton];
+        self.tableView.tableFooterView=footerView;
         
     }
     
