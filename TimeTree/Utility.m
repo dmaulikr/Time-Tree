@@ -31,7 +31,7 @@
         [pfArray addObject:obj];
     }
     
-    NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:pfArray];
+    NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:pfArray]; //過濾掉無重複的
     NSArray *arrayWithoutDuplicates = [orderedSet array];
     return arrayWithoutDuplicates;
 }
