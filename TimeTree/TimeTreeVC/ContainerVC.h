@@ -18,4 +18,8 @@
 
 +(ContainerVC*)currentInstance;
 
+
+// 1110 issue 1.增加內容後，不會跑到當前頁面  2.增加樹,不會出來樹  3.有時往右scroll無法循迴
+
+
 @end
