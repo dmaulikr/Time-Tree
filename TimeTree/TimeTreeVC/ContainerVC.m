@@ -163,6 +163,7 @@ static ContainerVC *_containerVC=nil;
     
     //先取樹內容全部 in parse tree content
     PFQuery *pq=[PFQuery queryWithClassName:@"treeContent"];
+    [pq whereKey:@"user" equalTo:self.user];
     [pq findObjectsInBackgroundWithBlock:^(NSArray *allContentArray,NSError *err){
         //        NSLog(@"allContentsArra--no filter Array--%lu",allContentArray.count);
         
@@ -173,7 +174,7 @@ static ContainerVC *_containerVC=nil;
         }
         
         if (allContentArray.count!=0) {
-            //排除相同的content_Obj 在parse treeContent
+            //排除相同的content_Obj(為關聯到TimeTreeObj的物件) 在parse treeContent
             NSArray *filterArray=[Utility arrayWithoutDuplicates:allContentArray];
             //        NSLog(@"filterArray %lu",filterArray.count);
             
@@ -332,34 +333,29 @@ static ContainerVC *_containerVC=nil;
 }
 
 -(void)addTimeTree{
-    //ScrollView
-    //    CGFloat scrollViewWidth = self.topButtonScrollView.frame.size.width;
-    //    self.scrollView.contentSize = CGSizeMake(scrollViewWidth*vcArray.count, self.scrollView.frame.size.height);
-    
-#warning  會蓋掉之前的name , 應該寫在修改名稱
-    //    PFQuery *query = [PFQuery queryWithClassName:@"TimeTreeObj"];
-    //    [query whereKey:@"user" equalTo:[PFUser currentUser]];
-    //    [query getFirstObjectInBackgroundWithBlock:^(PFObject * timeTreeObj, NSError *error) {
-    //        if (!error) {
-    //            [timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
-    //            [timeTreeObj saveInBackground];
-    //        } else {
-    //            NSLog(@"Add Catalogue Name Error: %@", error);
-    //        }
-    //    }];
     
     // 新增樹名
     self.timeTreeObj=[PFObject objectWithClassName:@"TimeTreeObj"];
     self.timeTreeObj[@"user"]=self.user;
     [self.timeTreeObj setObject:self.timeTreeName forKey:@"tree_name"];
     
-    // Create the treeContent
-    treeContent = [PFObject objectWithClassName:@"treeContent"];
-    // Add a relation between the timeTreeObj and treeContent （樹名關聯->樹內容）
-    self.timeTreeObj[@"treeContent"] = treeContent;
-    //同步存檔
-    [self.timeTreeObj save];
-    [self getTreeObjData];
+    [self.timeTreeObj saveInBackgroundWithBlock:^(BOOL success,NSError *err){
+        
+        // Create the treeContent
+        treeContent = [PFObject objectWithClassName:@"treeContent"];
+        // Add a relation between the timeTreeObj and treeContent （樹名關聯->樹內容）
+        
+        [treeContent setObject:self.user forKey:@"user"];
+        [treeContent setObject:self.timeTreeObj.objectId forKey:@"content_Obj"];
+        treeContent[@"content_Obj"]=self.timeTreeObj;
+        
+        //同步存檔
+        [treeContent save];
+        
+        [self getTreeObjData];
+    }];
+
+    
 }
 
 
